@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import PropertyCard from '../components/card/PropertyCard';
-import { mockProperties } from '../data/mockData';
+import { getListingSummaries } from '../data/listings'; // adjust path to wherever this lives
+import { ListingSummaryResponseListingTypeEnum } from '../api/openapi-generated';
 
 const SORT_OPTIONS = [
   { value: 'default', label: 'Mặc định' },
@@ -11,28 +13,43 @@ const SORT_OPTIONS = [
   { value: 'area-asc', label: 'Diện tích tăng dần' },
 ];
 
-const saleProperties = mockProperties.filter((p) => p.category === 'sale');
-
 export default function PropertiesSale() {
   const [sort, setSort] = useState('default');
   const [layoutView, setLayoutView] = useState<'grid' | 'list'>('grid');
   const [search, setSearch] = useState('');
-  const [selectedBeds, setSelectedBeds] = useState('');
+
+  const {
+    data: listings = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['listings', ListingSummaryResponseListingTypeEnum.ForSale],
+    queryFn: () =>
+      getListingSummaries(ListingSummaryResponseListingTypeEnum.ForSale),
+  });
 
   const filtered = useMemo(() => {
-    let data = [...saleProperties];
+    let data = [...listings];
+
     if (search) {
-      data = data.filter((p) =>
-        p.title.toLowerCase().includes(search.toLowerCase()) ||
-        p.location.toLowerCase().includes(search.toLowerCase())
+      const q = search.toLowerCase();
+      data = data.filter(
+        (p) =>
+          p.title?.toLowerCase().includes(q) ||
+          p.provinceName?.toLowerCase().includes(q)
       );
     }
-    if (selectedBeds) {
-      data = data.filter((p) => p.beds >= Number(selectedBeds));
+
+    if (sort === 'price-asc') {
+      data.sort((a, b) => (a.currentPrice ?? 0) - (b.currentPrice ?? 0));
+    } else if (sort === 'price-desc') {
+      data.sort((a, b) => (b.currentPrice ?? 0) - (a.currentPrice ?? 0));
+    } else if (sort === 'area-asc') {
+      data.sort((a, b) => (a.area ?? 0) - (b.area ?? 0));
     }
-    if (sort === 'area-asc') data.sort((a, b) => a.area - b.area);
+
     return data;
-  }, [sort, search, selectedBeds]);
+  }, [listings, sort, search]);
 
   return (
     <>
@@ -55,7 +72,9 @@ export default function PropertiesSale() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
               <div className="flex items-center border border-outline-variant px-4 gap-3 bg-white">
-                <span className="material-symbols-outlined text-secondary text-[18px]">search</span>
+                <span className="material-symbols-outlined text-secondary text-[18px]">
+                  search
+                </span>
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -63,17 +82,6 @@ export default function PropertiesSale() {
                   className="py-3 outline-none text-[16px] text-on-surface bg-transparent w-52"
                 />
               </div>
-              <select
-                value={selectedBeds}
-                onChange={(e) => setSelectedBeds(e.target.value)}
-                className="border border-outline-variant px-4 py-3 outline-none text-[16px] text-on-surface bg-white appearance-none"
-              >
-                <option value="">Số phòng ngủ</option>
-                <option value="1">1+ PN</option>
-                <option value="2">2+ PN</option>
-                <option value="3">3+ PN</option>
-                <option value="4">4+ PN</option>
-              </select>
             </div>
             <div className="flex items-center gap-4">
               <select
@@ -82,46 +90,97 @@ export default function PropertiesSale() {
                 className="border border-outline-variant px-4 py-3 outline-none text-[14px] text-on-surface bg-white appearance-none"
               >
                 {SORT_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
                 ))}
               </select>
               <div className="hidden md:flex border border-outline-variant">
                 <button
                   onClick={() => setLayoutView('grid')}
-                  className={`p-3 transition-colors ${layoutView === 'grid' ? 'bg-primary text-on-primary' : 'hover:bg-surface-container-low'}`}
+                  className={`p-3 transition-colors ${
+                    layoutView === 'grid'
+                      ? 'bg-primary text-on-primary'
+                      : 'hover:bg-surface-container-low'
+                  }`}
                   aria-label="Grid view"
                 >
-                  <span className="material-symbols-outlined text-[18px]">grid_view</span>
+                  <span className="material-symbols-outlined text-[18px]">
+                    grid_view
+                  </span>
                 </button>
                 <button
                   onClick={() => setLayoutView('list')}
-                  className={`p-3 transition-colors ${layoutView === 'list' ? 'bg-primary text-on-primary' : 'hover:bg-surface-container-low'}`}
+                  className={`p-3 transition-colors ${
+                    layoutView === 'list'
+                      ? 'bg-primary text-on-primary'
+                      : 'hover:bg-surface-container-low'
+                  }`}
                   aria-label="List view"
                 >
-                  <span className="material-symbols-outlined text-[18px]">view_list</span>
+                  <span className="material-symbols-outlined text-[18px]">
+                    view_list
+                  </span>
                 </button>
               </div>
             </div>
           </div>
 
           {/* Result Count */}
-          <p className="text-[16px] text-secondary mb-8">
-            Hiển thị{' '}
-            <span className="font-semibold text-primary">{filtered.length}</span> bất động sản
-          </p>
+          {!isLoading && !isError && (
+            <p className="text-[16px] text-secondary mb-8">
+              Hiển thị{' '}
+              <span className="font-semibold text-primary">
+                {filtered.length}
+              </span>{' '}
+              bất động sản
+            </p>
+          )}
 
-          {/* Grid / List */}
-          {filtered.length > 0 ? (
+          {/* Loading / Error / Empty / Content states */}
+          {isLoading ? (
+            <div className="py-40 text-center text-secondary text-[20px]">
+              Đang tải...
+            </div>
+          ) : isError ? (
+            <div className="py-40 text-center text-error text-[20px]">
+              Không thể tải danh sách bất động sản
+            </div>
+          ) : filtered.length > 0 ? (
             layoutView === 'grid' ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filtered.map((p) => (
-                  <PropertyCard key={p.id} property={p} layout="grid" />
+                  <PropertyCard
+                    key={p.id}
+                    property={{
+                      id: p.id,
+                      title: p.title ?? '',
+                      location: p.provinceName ?? '',
+                      area: p.area ?? 0,
+                      price: p.currentPrice ?? 0,
+                      image: p.thumbnails?.[0]?.url,
+                      slug: p.slug,
+                    }}
+                    layout="grid"
+                  />
                 ))}
               </div>
             ) : (
               <div className="flex flex-col gap-6">
                 {filtered.map((p) => (
-                  <PropertyCard key={p.id} property={p} layout="list" />
+                  <PropertyCard
+                    key={p.id}
+                    property={{
+                      id: p.id,
+                      title: p.title ?? '',
+                      location: p.provinceName ?? '',
+                      area: p.area ?? 0,
+                      price: p.currentPrice ?? 0,
+                      image: p.thumbnails?.[0]?.url,
+                      slug: p.slug,
+                    }}
+                    layout="list"
+                  />
                 ))}
               </div>
             )

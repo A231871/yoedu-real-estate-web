@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import PropertyCard from '../components/card/PropertyCard';
-import { mockProperties } from '../data/mockData';
+import { getListingDetail, getListingSummaries } from '../data/listings';
+import { formatPrice } from '../utils/format';
+import { ListingDetailResponseListingTypeEnum } from '../api/openapi-generated';
+
+const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';
 
 export default function PropertyDetail() {
   const { id } = useParams<{ id: string }>();
@@ -11,15 +16,50 @@ export default function PropertyDetail() {
   const [favorited, setFavorited] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
 
-  const property = mockProperties.find((p) => p.id === id);
+  // Fetch listing detail
+  const {
+    data: property,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['listing', id],
+    queryFn: () => getListingDetail(id!),
+    enabled: !!id,
+  });
 
-  if (!property) {
+  // Fetch related listings based on type
+  const { data: relatedListings = [] } = useQuery({
+    queryKey: ['listings', property?.listingType],
+    queryFn: () => getListingSummaries(property!.listingType!),
+    enabled: !!property?.listingType,
+  });
+
+  const related = useMemo(() => {
+    if (!property) return [];
+    return relatedListings
+      .filter((p) => p.id !== property.id)
+      .slice(0, 3);
+  }, [relatedListings, property]);
+
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <div className="pt-40 text-center py-40 text-secondary text-[20px]">
+          Đang tải thông tin chi tiết bất động sản...
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (isError || !property) {
     return (
       <>
         <Header />
         <div className="pt-40 text-center py-32">
           <h1 className="text-[40px] font-medium text-primary mb-6">Không tìm thấy bất động sản</h1>
-          <button onClick={() => navigate(-1)} className="bg-primary text-on-primary px-8 py-3 text-sm font-semibold uppercase">
+          <button onClick={() => navigate(-1)} className="bg-primary text-on-primary px-8 py-3 text-sm font-semibold uppercase rounded-sm">
             Quay lại
           </button>
         </div>
@@ -28,17 +68,38 @@ export default function PropertyDetail() {
     );
   }
 
-  const images = property.images ?? [property.image];
-  const related = mockProperties.filter((p) => p.id !== property.id && p.category === property.category).slice(0, 3);
+  const category = property.listingType === ListingDetailResponseListingTypeEnum.ForSale ? 'sale' : 'rent';
+  const images = property.listingMediaDtos?.map((m) => m.url).filter(Boolean) as string[] ?? [];
+  images.push(DEFAULT_FALLBACK_IMAGE) // TODO Change to proper images
 
+  const locationStr = property.address
+    ? `${property.address}, ${property.ward ? `${property.ward}, ` : ''}${property.province ?? ''}`
+    : property.province ?? '';
+
+  // Parse amenities and dynamic specifications
   const AMENITIES = [
-    { icon: 'bed', label: `${property.beds} Phòng ngủ` },
-    { icon: 'shower', label: `${property.baths} Phòng tắm` },
-    { icon: 'square_foot', label: `${property.area} m²` },
-    { icon: 'garage', label: 'Chỗ đậu xe' },
-    { icon: 'pool', label: 'Hồ bơi' },
-    { icon: 'security', label: 'An ninh 24/7' },
+    ...(property.bedrooms ? [{ icon: 'bed', label: `${property.bedrooms} Phòng ngủ` }] : []),
+    ...(property.bathrooms ? [{ icon: 'shower', label: `${property.bathrooms} Phòng tắm` }] : []),
+    ...(property.area ? [{ icon: 'square_foot', label: `${property.area} m²` }] : []),
+    ...(property.floors ? [{ icon: 'layers', label: `${property.floors} Tầng` }] : []),
+    ...(property.amenities?.map((name) => {
+      let icon = 'check_circle';
+      const lowercaseName = name.toLowerCase();
+      if (lowercaseName.includes('bể bơi') || lowercaseName.includes('hồ bơi')) icon = 'pool';
+      else if (lowercaseName.includes('xe')) icon = 'garage';
+      else if (lowercaseName.includes('an ninh') || lowercaseName.includes('bảo vệ')) icon = 'security';
+      else if (lowercaseName.includes('sân vườn') || lowercaseName.includes('vườn')) icon = 'yard';
+      else if (lowercaseName.includes('điều hòa') || lowercaseName.includes('máy lạnh')) icon = 'ac_unit';
+      else if (lowercaseName.includes('ban công')) icon = 'balcony';
+      else if (lowercaseName.includes('thang máy')) icon = 'elevator';
+      return { icon, label: name };
+    }) ?? [])
   ];
+
+  const formattedPrice = formatPrice(property.currentPrice, property.listingType);
+  const pricePerSqm = property.currentPrice && property.area && property.area > 0
+    ? Math.round(property.currentPrice / property.area).toLocaleString('vi-VN')
+    : null;
 
   return (
     <>
@@ -48,22 +109,22 @@ export default function PropertyDetail() {
         <div className="max-w-[1280px] mx-auto px-5 md:px-16 py-6 flex items-center gap-3 text-[12px] tracking-[0.05em] uppercase text-secondary">
           <Link to="/" className="hover:text-primary transition-colors">Trang chủ</Link>
           <span>/</span>
-          <Link to={property.category === 'sale' ? '/ban' : '/cho-thue'} className="hover:text-primary transition-colors">
-            {property.category === 'sale' ? 'Nhà đất bán' : 'Nhà đất cho thuê'}
+          <Link to={category === 'sale' ? '/ban' : '/cho-thue'} className="hover:text-primary transition-colors">
+            {category === 'sale' ? 'Nhà đất bán' : 'Nhà đất cho thuê'}
           </Link>
           <span>/</span>
-          <span className="text-primary">{property.title.slice(0, 30)}…</span>
+          <span className="text-primary">{property.title?.slice(0, 30)}…</span>
         </div>
 
         {/* Main Image + Gallery */}
         <div className="max-w-[1280px] mx-auto px-5 md:px-16 mb-16">
-          <div className="relative aspect-[16/9] overflow-hidden mb-4 cursor-zoom-in">
+          <div className="relative aspect-[16/9] overflow-hidden mb-4 rounded-lg">
             <img
               src={images[activeImg]}
-              alt={property.title}
+              alt={property.title || 'Property Detail'}
               className="w-full h-full object-cover transition-all duration-500"
             />
-            <span className="absolute bottom-4 right-4 bg-black/60 text-white text-[12px] font-semibold px-4 py-2 tracking-widest uppercase">
+            <span className="absolute bottom-4 right-4 bg-black/60 text-white text-[12px] font-semibold px-4 py-2 tracking-widest uppercase rounded-sm">
               {activeImg + 1} / {images.length}
             </span>
           </div>
@@ -73,7 +134,7 @@ export default function PropertyDetail() {
                 <button
                   key={i}
                   onClick={() => setActiveImg(i)}
-                  className={`flex-shrink-0 w-24 h-16 overflow-hidden border-2 transition-all ${
+                  className={`flex-shrink-0 w-24 h-16 overflow-hidden border-2 transition-all rounded-md ${
                     activeImg === i ? 'border-primary' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
@@ -94,7 +155,7 @@ export default function PropertyDetail() {
               </h1>
               <button
                 onClick={() => setFavorited((f) => !f)}
-                className="flex-shrink-0 p-3 border border-outline-variant hover:bg-surface-container-low transition-colors"
+                className="flex-shrink-0 p-3 border border-outline-variant hover:bg-surface-container-low transition-colors rounded-sm"
                 aria-label="Yêu thích"
               >
                 <span
@@ -108,7 +169,7 @@ export default function PropertyDetail() {
 
             <p className="flex items-center gap-2 text-[16px] text-secondary mb-6">
               <span className="material-symbols-outlined text-[18px]">location_on</span>
-              {property.location}
+              <span>{locationStr}</span>
             </p>
 
             <div className="grid grid-cols-3 gap-4 py-6 border-y border-outline-variant mb-8">
@@ -122,43 +183,45 @@ export default function PropertyDetail() {
 
             <section className="mb-12">
               <h2 className="text-[24px] font-semibold text-primary mb-4">Mô tả</h2>
-              <p className="text-[16px] leading-[1.8] text-secondary">
-                Đây là bất động sản cao cấp tại {property.location}, được thiết kế với tiêu chuẩn quốc tế.
-                Không gian sống đẳng cấp với {property.beds} phòng ngủ, {property.baths} phòng tắm và diện tích {property.area} m².
-                Vị trí đắc địa, tiện ích đầy đủ, pháp lý hoàn chỉnh — lý tưởng để sinh sống và đầu tư.
+              <p className="text-[16px] leading-[1.8] text-secondary whitespace-pre-line">
+                {property.description || `Đây là bất động sản cao cấp tại ${locationStr}, được thiết kế với tiêu chuẩn quốc tế.`}
               </p>
             </section>
 
-            <section>
-              <h2 className="text-[24px] font-semibold text-primary mb-6">Tiện ích</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {AMENITIES.map((a) => (
-                  <div key={a.label} className="flex items-center gap-3 py-3 px-4 border border-outline-variant">
-                    <span className="material-symbols-outlined text-primary text-[22px]">{a.icon}</span>
-                    <span className="text-[16px] text-secondary">{a.label}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
+            {AMENITIES.length > 3 && (
+              <section>
+                <h2 className="text-[24px] font-semibold text-primary mb-6">Tiện ích</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {AMENITIES.map((a) => (
+                    <div key={a.label} className="flex items-center gap-3 py-3 px-4 border border-outline-variant rounded-sm">
+                      <span className="material-symbols-outlined text-primary text-[22px]">{a.icon}</span>
+                      <span className="text-[16px] text-secondary">{a.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
 
           {/* Sidebar */}
           <div className="h-fit sticky top-28">
-            <div className="border border-outline-variant p-8">
-              <p className="text-[40px] font-bold text-primary mb-2">{property.price}</p>
-              <p className="text-[16px] text-secondary mb-8">
-                ~ {property.area > 0 ? Math.round(parseInt(property.price.replace(/\D/g, '')) / property.area).toLocaleString() : 'N/A'} đ/m²
-              </p>
-              <button className="w-full bg-primary text-on-primary py-4 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase mb-4 hover:opacity-90 transition-all">
+            <div className="border border-outline-variant p-8 rounded-lg bg-white">
+              <p className="text-[32px] md:text-[40px] font-bold text-primary mb-2">{formattedPrice}</p>
+              {pricePerSqm && (
+                <p className="text-[16px] text-secondary mb-8">
+                  ~ {pricePerSqm} đ/m²
+                </p>
+              )}
+              <button className="w-full bg-primary text-on-primary py-4 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase mb-4 hover:opacity-90 transition-all rounded-sm">
                 Liên hệ tư vấn
               </button>
-              <button className="w-full border border-primary text-primary py-4 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase hover:bg-primary hover:text-on-primary transition-all mb-8">
+              <button className="w-full border border-primary text-primary py-4 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase hover:bg-primary hover:text-on-primary transition-all mb-8 rounded-sm">
                 Đặt lịch xem nhà
               </button>
               <div className="border-t border-outline-variant pt-6 space-y-4">
                 <p className="text-[12px] font-semibold tracking-[0.05em] uppercase text-secondary">Nhà môi giới</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-surface-container-low flex items-center justify-center">
+                  <div className="w-12 h-12 bg-surface-container-low flex items-center justify-center rounded-sm">
                     <span className="material-symbols-outlined text-[28px] text-secondary">person</span>
                   </div>
                   <div>
@@ -178,7 +241,19 @@ export default function PropertyDetail() {
               <h2 className="text-[32px] font-medium text-primary mb-12">Bất động sản tương tự</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {related.map((p) => (
-                  <PropertyCard key={p.id} property={p} />
+                  <PropertyCard
+                    key={p.id}
+                    property={{
+                      id: p.id,
+                      title: p.title ?? '',
+                      location: p.provinceName ?? '',
+                      area: p.area ?? 0,
+                      price: p.currentPrice ?? 0,
+                      image: p.thumbnails?.[0]?.url,
+                      slug: p.slug,
+                      listingType: p.listingType,
+                    }}
+                  />
                 ))}
               </div>
             </div>

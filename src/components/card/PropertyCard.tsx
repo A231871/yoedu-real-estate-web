@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { formatPrice } from '../../utils/stringFormatter';
+import { formatPrice } from '../../utils/format';
 
 export interface PropertyCardData {
   id?: string;
@@ -10,6 +10,8 @@ export interface PropertyCardData {
   price?: string | number;
   image?: string;
   slug?: string;
+  beds?: number;
+  baths?: number;
   tag?: string;
   listingType?: string;
   category?: 'sale' | 'rent';
@@ -29,7 +31,27 @@ export default function PropertyCard({ property, layout = 'grid' }: PropertyCard
 
   const isRent = property.listingType === 'FOR_RENT' || property.category === 'rent' || property.type === 'rent';
   const tagText = property.tag || (isRent ? 'Cho thuê' : 'Đang bán');
-  const imageUrl = DEFAULT_FALLBACK_IMAGE; // TODO: Replace this when we have actual images
+  const imageUrl = DEFAULT_FALLBACK_IMAGE; // TODO: Change to proper image
+
+  // Dynamically build metrics list to avoid empty slots or trailing pipes
+  const metrics: string[] = [];
+  if (property.beds && property.beds > 0) metrics.push(`${property.beds} PN`);
+  if (property.baths && property.baths > 0) metrics.push(`${property.baths} PT`);
+  if (property.area && property.area > 0) metrics.push(`${property.area} m²`);
+
+  const renderMetrics = () => {
+    if (metrics.length === 0) return null;
+    return (
+      <div className="flex items-center gap-3 py-2 border-y border-outline-variant text-[12px] leading-[1] font-semibold tracking-[0.05em] text-primary uppercase">
+        {metrics.map((metric, index) => (
+          <span key={metric} className="flex items-center gap-3">
+            <span>{metric}</span>
+            {index < metrics.length - 1 && <span className="text-outline-variant font-normal">|</span>}
+          </span>
+        ))}
+      </div>
+    );
+  };
 
   if (layout === 'list') {
     return (
@@ -54,11 +76,7 @@ export default function PropertyCard({ property, layout = 'grid' }: PropertyCard
               <span className="material-symbols-outlined text-[18px]">location_on</span>
               <span>{property.location}</span>
             </p>
-            <div className="flex items-center gap-3 py-2 border-y border-outline-variant text-[12px] leading-[1] font-semibold tracking-[0.05em] text-primary uppercase">
-              <span className='flex items-start gap-3'>
-                <span>{property.area} m²</span>
-              </span>
-            </div>
+            {renderMetrics()}
           </div>
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
             <p className="text-[20px] md:text-[24px] leading-[1.4] font-bold text-primary">
@@ -116,11 +134,7 @@ export default function PropertyCard({ property, layout = 'grid' }: PropertyCard
           <span className="material-symbols-outlined text-[18px]">location_on</span>
           <span className="line-clamp-1">{property.location}</span>
         </p>
-        <div className="flex items-center gap-3 py-2 border-y border-outline-variant text-[12px] leading-[1] font-semibold tracking-[0.05em] text-primary uppercase">
-          <span className='flex items-start gap-3'>
-            <span>{property.area} m²</span>
-          </span>
-        </div>
+        {renderMetrics()}
         <p className="text-[20px] md:text-[24px] leading-[1.4] font-bold text-primary pt-1">
           {formatPrice(property.price, property.listingType, property.category || property.type)}
         </p>

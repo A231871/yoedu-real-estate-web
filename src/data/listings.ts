@@ -15,7 +15,12 @@ export async function getListingSummaries(
   return data.data?.content?.filter((listing) => listing.listingType === listingType) ?? [];
 }
 
-export async function getListingDetail(listingId: string): Promise<ListingDetailResponse | undefined> {
+export async function getListingDetail(listingId: string): Promise<ListingDetailResponse> {
   const { data } = await listingControllerApi.getListingDetail({ id: listingId });
+
+  if (!data.data) {
+    throw new Error("Listing not found");
+  }
+
   return data.data;
 }

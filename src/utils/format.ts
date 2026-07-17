@@ -1,4 +1,3 @@
-// Format prices nicely (handling raw numbers and string prices)
 export function formatPrice(price: string | number | undefined, listingType?: string, category?: string) {
   if (price === undefined || price === null || price === 0) {
     return 'Liên hệ';

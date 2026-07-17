@@ -1,4 +1,4 @@
-# ApiResponseListListingSummaryResponse
+# ApiResponsePageListingSummaryResponse
 
 
 ## Properties
@@ -7,15 +7,15 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** |  | [optional] [default to undefined]
 **message** | **string** |  | [optional] [default to undefined]
-**data** | [**Array&lt;ListingSummaryResponse&gt;**](ListingSummaryResponse.md) |  | [optional] [default to undefined]
+**data** | [**PageListingSummaryResponse**](PageListingSummaryResponse.md) |  | [optional] [default to undefined]
 **timestamp** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { ApiResponseListListingSummaryResponse } from './api';
+import { ApiResponsePageListingSummaryResponse } from './api';
 
-const instance: ApiResponseListListingSummaryResponse = {
+const instance: ApiResponsePageListingSummaryResponse = {
     success,
     message,
     data,

@@ -22,9 +22,9 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { ApiResponseListListingSummaryResponse } from '../models';
-// @ts-ignore
 import type { ApiResponseListingDetailResponse } from '../models';
+// @ts-ignore
+import type { ApiResponsePageListingSummaryResponse } from '../models';
 // @ts-ignore
 import type { ApiResponseString } from '../models';
 // @ts-ignore
@@ -148,10 +148,16 @@ export const ListingControllerApiAxiosParamCreator = function (configuration?: C
         },
         /**
          * 
+         * @param {GetListingsListingTypeEnum} listingType 
+         * @param {number} [page] Zero-based page index (0..N)
+         * @param {number} [size] The size of the page to be returned
+         * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getListings: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getListings: async (listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'listingType' is not null or undefined
+            assertParamExists('getListings', 'listingType', listingType)
             const localVarPath = `/listing`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -167,6 +173,22 @@ export const ListingControllerApiAxiosParamCreator = function (configuration?: C
             // authentication bearerAuth required
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            if (sort) {
+                localVarQueryParameter['sort'] = sort;
+            }
+
+            if (listingType !== undefined) {
+                localVarQueryParameter['listingType'] = listingType;
+            }
 
             localVarHeaderParameter['Accept'] = '*/*';
 
@@ -268,11 +290,15 @@ export const ListingControllerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {GetListingsListingTypeEnum} listingType 
+         * @param {number} [page] Zero-based page index (0..N)
+         * @param {number} [size] The size of the page to be returned
+         * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getListings(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListListingSummaryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getListings(options);
+        async getListings(listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePageListingSummaryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getListings(listingType, page, size, sort, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ListingControllerApi.getListings']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -328,11 +354,12 @@ export const ListingControllerApiFactory = function (configuration?: Configurati
         },
         /**
          * 
+         * @param {ListingControllerApiGetListingsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getListings(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListListingSummaryResponse> {
-            return localVarFp.getListings(options).then((request) => request(axios, basePath));
+        getListings(requestParameters: ListingControllerApiGetListingsRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePageListingSummaryResponse> {
+            return localVarFp.getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -376,10 +403,11 @@ export interface ListingControllerApiInterface {
 
     /**
      * 
+     * @param {ListingControllerApiGetListingsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getListings(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListListingSummaryResponse>;
+    getListings(requestParameters: ListingControllerApiGetListingsRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePageListingSummaryResponse>;
 
     /**
      * 
@@ -410,6 +438,28 @@ export interface ListingControllerApiDeleteListingRequest {
  */
 export interface ListingControllerApiGetListingDetailRequest {
     readonly id: string
+}
+
+/**
+ * Request parameters for getListings operation in ListingControllerApi.
+ */
+export interface ListingControllerApiGetListingsRequest {
+    readonly listingType: GetListingsListingTypeEnum
+
+    /**
+     * Zero-based page index (0..N)
+     */
+    readonly page?: number
+
+    /**
+     * The size of the page to be returned
+     */
+    readonly size?: number
+
+    /**
+     * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+     */
+    readonly sort?: Array<string>
 }
 
 /**
@@ -457,11 +507,12 @@ export class ListingControllerApi extends BaseAPI implements ListingControllerAp
 
     /**
      * 
+     * @param {ListingControllerApiGetListingsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getListings(options?: RawAxiosRequestConfig) {
-        return ListingControllerApiFp(this.configuration).getListings(options).then((request) => request(this.axios, this.basePath));
+    public getListings(requestParameters: ListingControllerApiGetListingsRequest, options?: RawAxiosRequestConfig) {
+        return ListingControllerApiFp(this.configuration).getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -475,3 +526,8 @@ export class ListingControllerApi extends BaseAPI implements ListingControllerAp
     }
 }
 
+export const GetListingsListingTypeEnum = {
+    ForSale: 'FOR_SALE',
+    ForRent: 'FOR_RENT',
+} as const;
+export type GetListingsListingTypeEnum = typeof GetListingsListingTypeEnum[keyof typeof GetListingsListingTypeEnum];

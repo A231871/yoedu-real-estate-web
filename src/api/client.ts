@@ -20,7 +20,7 @@ globalAxios.interceptors.response.use(
 );
 
 const configuration = new Configuration({
-  basePath: import.meta.env.BACKEND_URL
+  basePath: "http://localhost:8080/api"
 });
 
 // Export API controllers

@@ -162,7 +162,7 @@ const { status, data } = await apiInstance.getListingDetail(
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getListings**
-> ApiResponseListListingSummaryResponse getListings()
+> ApiResponsePageListingSummaryResponse getListings()
 
 
 ### Example
@@ -176,16 +176,32 @@ import {
 const configuration = new Configuration();
 const apiInstance = new ListingControllerApi(configuration);
 
-const { status, data } = await apiInstance.getListings();
+let listingType: 'FOR_SALE' | 'FOR_RENT'; // (default to undefined)
+let page: number; //Zero-based page index (0..N) (optional) (default to 0)
+let size: number; //The size of the page to be returned (optional) (default to 20)
+let sort: Array<string>; //Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. (optional) (default to undefined)
+
+const { status, data } = await apiInstance.getListings(
+    listingType,
+    page,
+    size,
+    sort
+);
 ```
 
 ### Parameters
-This endpoint does not have any parameters.
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **listingType** | [**&#39;FOR_SALE&#39; | &#39;FOR_RENT&#39;**]**Array<&#39;FOR_SALE&#39; &#124; &#39;FOR_RENT&#39;>** |  | defaults to undefined|
+| **page** | [**number**] | Zero-based page index (0..N) | (optional) defaults to 0|
+| **size** | [**number**] | The size of the page to be returned | (optional) defaults to 20|
+| **sort** | **Array&lt;string&gt;** | Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. | (optional) defaults to undefined|
 
 
 ### Return type
 
-**ApiResponseListListingSummaryResponse**
+**ApiResponsePageListingSummaryResponse**
 
 ### Authorization
 

@@ -15,12 +15,14 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { ListingSummaryResponse } from './listing-summary-response';
+import type { SortObject } from './sort-object';
 
-export interface ApiResponseListListingSummaryResponse {
-    'success'?: boolean;
-    'message'?: string;
-    'data'?: Array<ListingSummaryResponse>;
-    'timestamp'?: string;
+export interface PageableObject {
+    'paged'?: boolean;
+    'pageNumber'?: number;
+    'pageSize'?: number;
+    'unpaged'?: boolean;
+    'offset'?: number;
+    'sort'?: SortObject;
 }
 

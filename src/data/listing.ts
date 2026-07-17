@@ -1,9 +1,9 @@
-import { listingControllerApi } from "../api/client";
+import { listingControllerApi } from "@/api/client";
 import {
   ListingSummaryResponseListingTypeEnum,
   type ListingDetailResponse,
   type ListingSummaryResponse
-} from "../api/openapi-generated";
+} from "@/api/openapi-generated";
 
 export async function getListingSummaries(
   listingType: ListingSummaryResponseListingTypeEnum,

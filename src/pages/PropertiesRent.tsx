@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
-import PropertyCard from '../components/card/PropertyCard';
-import { getListingSummaries } from '../data/listings';
-import { ListingSummaryResponseListingTypeEnum } from '../api/openapi-generated';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import PropertyCard from '@/components/card/PropertyCard';
+import { getListingSummaries } from '@/data/listing';
+import { ListingSummaryResponseListingTypeEnum } from '@/api/openapi-generated';
 
 const SORT_OPTIONS = [
   { value: 'default', label: 'Mặc định' },

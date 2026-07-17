@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/layout/ScrollToTop';
 import Home from './pages/Home';
 import PropertiesSale from './pages/PropertiesSale';
 import PropertiesRent from './pages/PropertiesRent';
@@ -12,6 +13,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/ban" element={<PropertiesSale />} />

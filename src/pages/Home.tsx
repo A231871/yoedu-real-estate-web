@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
-import PropertyCard from '../components/card/PropertyCard';
-import { mockProperties } from '../data/mockData';
+import { useQuery } from '@tanstack/react-query';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import PropertyCard from '@/components/card/PropertyCard';
+import { getListingSummaries } from '@/data/listing';
+import { ListingSummaryResponseListingTypeEnum } from '@/api/openapi-generated';
 
 const HERO_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAbC-yD8HsiROnP4hX1qac4cfAtbsxH-DsSA_9KmfwT5d8crmRc3j5iIIL8dMMevjsjVgqHECfPfCqnE4X9mN59UocsB4T4JpC4daaCLkzXOn933nik8Av-ByXf1CmZEdes3PECiI3koaBbkxaIcyzpPEg2Qk0Ol64UoM1LqkpXU4-0GkGbcIfdJGeZurfnCnK7KsH3J1mlv5aseqXuOOpqLyIagTaC_SqMkZ6j6XvzZUMf12vPrqLf8-ZUmR23vJA0gzvl4XXPQEg';
 
@@ -25,14 +27,24 @@ const WHY_US = [
   },
 ];
 
-const featured = mockProperties.slice(0, 3);
-
 export default function Home() {
   const navigate = useNavigate();
   const [location, setLocation] = useState('');
   const [type, setType] = useState('');
   const [price, setPrice] = useState('');
   const [email, setEmail] = useState('');
+
+  const {
+    data: listings = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['listings', ListingSummaryResponseListingTypeEnum.ForSale],
+    queryFn: () =>
+      getListingSummaries(ListingSummaryResponseListingTypeEnum.ForSale),
+  });
+
+  const featured = listings.slice(0, 3);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,11 +138,36 @@ export default function Home() {
               Xem tất cả tài sản
             </a>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featured.map((p) => (
-              <PropertyCard key={p.id} property={p} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="py-20 text-center text-secondary text-[20px]">
+              Đang tải...
+            </div>
+          ) : isError ? (
+            <div className="py-20 text-center text-error text-[20px]">
+              Không thể tải danh sách bất động sản
+            </div>
+          ) : featured.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {featured.map((p) => (
+                <PropertyCard
+                  key={p.id}
+                  property={{
+                    id: p.id,
+                    title: p.title ?? '',
+                    location: p.provinceName ?? '',
+                    area: p.area ?? 0,
+                    price: p.currentPrice ?? 0,
+                    image: p.thumbnails?.[0]?.url,
+                    slug: p.slug,
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="py-20 text-center text-secondary text-[20px]">
+              Chưa có bất động sản nào
+            </div>
+          )}
         </section>
 
         {/* ── Why Us ── */}

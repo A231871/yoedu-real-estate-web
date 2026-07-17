@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
-import PropertyCard from '../components/card/PropertyCard';
-import { getListingDetail, getListingSummaries } from '../data/listings';
-import { formatPrice } from '../utils/format';
-import { ListingDetailResponseListingTypeEnum } from '../api/openapi-generated';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import PropertyCard from '@/components/card/PropertyCard';
+import { getListingDetail, getListingSummaries } from '@/data/listing';
+import { formatPrice } from '@/utils/format';
+import { ListingDetailResponseListingTypeEnum } from '@/api/openapi-generated';
 
 const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';
 

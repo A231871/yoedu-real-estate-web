@@ -1,0 +1,205 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import PropertyCard from '@/components/card/PropertyCard';
+import { getListingSummaries } from '@/data/listing';
+import { ListingSummaryResponseListingTypeEnum } from '@/api/openapi-generated';
+
+const HERO_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAbC-yD8HsiROnP4hX1qac4cfAtbsxH-DsSA_9KmfwT5d8crmRc3j5iIIL8dMMevjsjVgqHECfPfCqnE4X9mN59UocsB4T4JpC4daaCLkzXOn933nik8Av-ByXf1CmZEdes3PECiI3koaBbkxaIcyzpPEg2Qk0Ol64UoM1LqkpXU4-0GkGbcIfdJGeZurfnCnK7KsH3J1mlv5aseqXuOOpqLyIagTaC_SqMkZ6j6XvzZUMf12vPrqLf8-ZUmR23vJA0gzvl4XXPQEg';
+
+const WHY_US = [
+  {
+    icon: 'verified',
+    title: 'Tài sản chọn lọc',
+    desc: 'Chúng tôi chỉ cung cấp những bất động sản đã qua kiểm định khắt khe về pháp lý và kiến trúc, đảm bảo giá trị bền vững.',
+  },
+  {
+    icon: 'support_agent',
+    title: 'Chuyên gia tận tâm',
+    desc: 'Đội ngũ cố vấn của chúng tôi có am hiểu sâu sắc về thị trường cao cấp, sẵn sàng đồng hành cùng bạn trong mọi quyết định.',
+  },
+  {
+    icon: 'visibility',
+    title: 'Minh bạch tuyệt đối',
+    desc: 'Quy trình giao dịch minh bạch, thông tin chính xác 100% giúp khách hàng hoàn toàn an tâm khi đầu tư.',
+  },
+];
+
+export default function Home() {
+  const navigate = useNavigate();
+  const [location, setLocation] = useState('');
+  const [type, setType] = useState('');
+  const [price, setPrice] = useState('');
+  const [email, setEmail] = useState('');
+
+  const {
+    data: listings = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['listings', ListingSummaryResponseListingTypeEnum.ForSale],
+    queryFn: () =>
+      getListingSummaries(ListingSummaryResponseListingTypeEnum.ForSale),
+  });
+
+  const featured = listings.slice(0, 3);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate('/ban');
+  };
+
+  return (
+    <>
+      <Header />
+      <main className="pt-24">
+        {/* ── Hero ── */}
+        <section className="relative h-[85vh] flex items-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <div
+              className="w-full h-full bg-cover bg-center"
+              style={{ backgroundImage: `url('${HERO_IMG}')` }}
+            />
+            <div className="absolute inset-0 bg-black/35" />
+          </div>
+
+          <div className="relative z-10 max-w-[1280px] mx-auto px-5 md:px-16 w-full">
+            <div className="max-w-3xl">
+              <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.1] md:leading-[1.1] tracking-[-0.02em] text-white mb-8">
+                Tìm ngôi nhà mơ ước của bạn tại Yoedu Property
+              </h1>
+
+              {/* Search Box */}
+              <form
+                onSubmit={handleSearch}
+                className="bg-white p-2 flex flex-col md:flex-row gap-0 shadow-2xl"
+              >
+                <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-outline-variant py-4 gap-3">
+                  <span className="material-symbols-outlined text-secondary">location_on</span>
+                  <input
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="w-full border-none outline-none text-[16px] text-on-surface bg-transparent"
+                    placeholder="Nhập địa điểm"
+                    type="text"
+                  />
+                </div>
+                <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-outline-variant py-4 gap-3">
+                  <span className="material-symbols-outlined text-secondary">home</span>
+                  <select
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                    className="w-full border-none outline-none text-[16px] text-on-surface bg-transparent appearance-none"
+                  >
+                    <option value="">Loại nhà</option>
+                    <option value="apartment">Căn hộ</option>
+                    <option value="villa">Biệt thự</option>
+                    <option value="townhouse">Nhà phố</option>
+                  </select>
+                </div>
+                <div className="flex-1 flex items-center px-4 py-4 gap-3">
+                  <span className="material-symbols-outlined text-secondary">payments</span>
+                  <input
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="w-full border-none outline-none text-[16px] text-on-surface bg-transparent"
+                    placeholder="Mức giá"
+                    type="text"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="bg-primary text-on-primary px-10 py-4 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase hover:opacity-90 transition-all whitespace-nowrap"
+                >
+                  Tìm kiếm
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Featured Properties ── */}
+        <section className="py-24 max-w-[1280px] mx-auto px-5 md:px-16">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div>
+              <span className="text-[12px] leading-[1] font-semibold tracking-[0.2em] text-secondary uppercase mb-4 block">
+                Bộ sưu tập cao cấp
+              </span>
+              <h2 className="text-[32px] md:text-[48px] font-medium leading-[1.3] tracking-[-0.01em] text-primary">
+                Nhà đất nổi bật
+              </h2>
+            </div>
+            <a
+              href="/ban"
+              className="text-[12px] font-semibold leading-[1] tracking-[0.05em] border-b border-primary pb-1 uppercase hover:text-secondary hover:border-secondary transition-all"
+            >
+              Xem tất cả tài sản
+            </a>
+          </div>
+          {isLoading ? (
+            <div className="py-20 text-center text-secondary text-[20px]">
+              Đang tải...
+            </div>
+          ) : isError ? (
+            <div className="py-20 text-center text-error text-[20px]">
+              Không thể tải danh sách bất động sản
+            </div>
+          ) : featured.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {featured.map((p) => (
+                <PropertyCard
+                  key={p.id}
+                  property={{
+                    id: p.id,
+                    title: p.title ?? '',
+                    location: p.provinceName ?? '',
+                    area: p.area ?? 0,
+                    price: p.currentPrice ?? 0,
+                    image: p.thumbnails?.[0]?.url,
+                    slug: p.slug,
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="py-20 text-center text-secondary text-[20px]">
+              Chưa có bất động sản nào
+            </div>
+          )}
+        </section>
+
+        {/* ── Why Us ── */}
+        <section className="py-24 bg-surface-container-low">
+          <div className="max-w-[1280px] mx-auto px-5 md:px-16">
+            <div className="text-center max-w-2xl mx-auto mb-20">
+              <span className="text-[12px] leading-[1] font-semibold tracking-[0.2em] text-secondary uppercase mb-4 block">
+                Giá trị cốt lõi
+              </span>
+              <h2 className="text-[40px] md:text-[48px] font-medium leading-[1.3] tracking-[-0.01em] text-primary">
+                Tại sao chọn chúng tôi
+              </h2>
+              <div className="w-20 h-1 bg-primary mx-auto mt-8" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+              {WHY_US.map((item) => (
+                <div key={item.icon} className="text-center group">
+                  <div className="w-16 h-16 bg-white border border-outline-variant flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                    <span className="material-symbols-outlined text-[30px]">{item.icon}</span>
+                  </div>
+                  <h4 className="text-[24px] leading-[1.4] font-medium text-primary mb-4">
+                    {item.title}
+                  </h4>
+                  <p className="text-[16px] leading-[1.6] text-secondary">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}

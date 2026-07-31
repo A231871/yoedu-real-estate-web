@@ -25,7 +25,3 @@ dist-ssr
 
 # Environments
 .env
-
-# Auto-generated OpenAPI client (regenerate locally with: npx @openapitools/openapi-generator-cli generate)
-src/api/openapi-generated/
-openapitools.json

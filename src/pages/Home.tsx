@@ -32,7 +32,6 @@ export default function Home() {
   const [location, setLocation] = useState('');
   const [type, setType] = useState('');
   const [price, setPrice] = useState('');
-  const [email, setEmail] = useState('');
 
   const {
     data: listings = [],

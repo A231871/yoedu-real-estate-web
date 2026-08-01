@@ -18,9 +18,9 @@
 import type { ProvinceResponse } from './province-response';
 
 export interface ApiResponseListProvinceResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: Array<ProvinceResponse>;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

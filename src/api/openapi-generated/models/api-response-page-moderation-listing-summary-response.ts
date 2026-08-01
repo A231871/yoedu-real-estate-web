@@ -18,9 +18,9 @@
 import type { PageModerationListingSummaryResponse } from './page-moderation-listing-summary-response';
 
 export interface ApiResponsePageModerationListingSummaryResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: PageModerationListingSummaryResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

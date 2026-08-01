@@ -18,9 +18,9 @@
 import type { ListingAuditHistoryResponse } from './listing-audit-history-response';
 
 export interface ApiResponseListListingAuditHistoryResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: Array<ListingAuditHistoryResponse>;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

@@ -18,9 +18,9 @@
 import type { PageAuditLogResponse } from './page-audit-log-response';
 
 export interface ApiResponsePageAuditLogResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: PageAuditLogResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

@@ -18,9 +18,9 @@
 import type { MessageResponse } from './message-response';
 
 export interface ApiResponseMessageResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: MessageResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

@@ -76,6 +76,40 @@ export const AuthenticationApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
+         * Revoke the refresh token from that device
+         * @summary Logout and revoke refresh token
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        logout: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Validates a refresh token, revokes it, and issues a new access + refresh token pair (rotating strategy)
          * @summary Rotate refresh token
          * @param {RefreshRequest} refreshRequest 
@@ -217,6 +251,18 @@ export const AuthenticationApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Revoke the refresh token from that device
+         * @summary Logout and revoke refresh token
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async logout(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseVoid>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.logout(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthenticationApi.logout']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Validates a refresh token, revokes it, and issues a new access + refresh token pair (rotating strategy)
          * @summary Rotate refresh token
          * @param {RefreshRequest} refreshRequest 
@@ -275,6 +321,15 @@ export const AuthenticationApiFactory = function (configuration?: Configuration,
             return localVarFp.login(requestParameters.loginRequest, options).then((request) => request(axios, basePath));
         },
         /**
+         * Revoke the refresh token from that device
+         * @summary Logout and revoke refresh token
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        logout(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
+            return localVarFp.logout(options).then((request) => request(axios, basePath));
+        },
+        /**
          * Validates a refresh token, revokes it, and issues a new access + refresh token pair (rotating strategy)
          * @summary Rotate refresh token
          * @param {AuthenticationApiRefreshRequest} requestParameters Request parameters.
@@ -319,6 +374,14 @@ export interface AuthenticationApiInterface {
      * @throws {RequiredError}
      */
     login(requestParameters: AuthenticationApiLoginRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAuthResponse>;
+
+    /**
+     * Revoke the refresh token from that device
+     * @summary Logout and revoke refresh token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    logout(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid>;
 
     /**
      * Validates a refresh token, revokes it, and issues a new access + refresh token pair (rotating strategy)
@@ -390,6 +453,16 @@ export class AuthenticationApi extends BaseAPI implements AuthenticationApiInter
      */
     public login(requestParameters: AuthenticationApiLoginRequest, options?: RawAxiosRequestConfig) {
         return AuthenticationApiFp(this.configuration).login(requestParameters.loginRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Revoke the refresh token from that device
+     * @summary Logout and revoke refresh token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public logout(options?: RawAxiosRequestConfig) {
+        return AuthenticationApiFp(this.configuration).logout(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

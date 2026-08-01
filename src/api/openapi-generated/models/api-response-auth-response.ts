@@ -18,9 +18,9 @@
 import type { AuthResponse } from './auth-response';
 
 export interface ApiResponseAuthResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: AuthResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

@@ -5,6 +5,7 @@ All URIs are relative to *http://localhost:8080/api*
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**login**](#login) | **POST** /auth/login | Authenticate user|
+|[**logout**](#logout) | **POST** /auth/logout | Logout and revoke refresh token|
 |[**refresh**](#refresh) | **POST** /auth/refresh | Rotate refresh token|
 |[**register**](#register) | **POST** /auth/register | Register a new user|
 |[**verify**](#verify) | **GET** /auth/verify | Verify a pending registration|
@@ -51,6 +52,50 @@ const { status, data } = await apiInstance.login(
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **logout**
+> ApiResponseVoid logout()
+
+Revoke the refresh token from that device
+
+### Example
+
+```typescript
+import {
+    AuthenticationApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AuthenticationApi(configuration);
+
+const { status, data } = await apiInstance.logout();
+```
+
+### Parameters
+This endpoint does not have any parameters.
+
+
+### Return type
+
+**ApiResponseVoid**
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: */*
 
 

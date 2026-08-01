@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**success** | **boolean** |  | [optional] [default to undefined]
-**message** | **string** |  | [optional] [default to undefined]
+**success** | **boolean** |  | [default to undefined]
+**message** | **string** |  | [default to undefined]
 **data** | [**GdprPurgeResponse**](GdprPurgeResponse.md) |  | [optional] [default to undefined]
-**timestamp** | **string** |  | [optional] [default to undefined]
+**timestamp** | **string** |  | [default to undefined]
 
 ## Example
 

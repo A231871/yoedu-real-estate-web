@@ -8,7 +8,7 @@ import PropertyDetail from './pages/PropertyDetail';
 import Auth from './pages/Auth';
 import VerifyEmail from './pages/VerifyEmail';
 import RegisterSuccess from './pages/RegisterSuccess';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context/auth/AuthProvider';
 
 const queryClient = new QueryClient();
 

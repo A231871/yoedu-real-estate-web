@@ -15,9 +15,9 @@
 
 
 export interface ApiResponseLong {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: number;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

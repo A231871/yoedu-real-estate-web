@@ -18,9 +18,9 @@
 import type { SliceMessageResponse } from './slice-message-response';
 
 export interface ApiResponseSliceMessageResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: SliceMessageResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

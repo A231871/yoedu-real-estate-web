@@ -18,9 +18,9 @@
 import type { PageViewingScheduleResponse } from './page-viewing-schedule-response';
 
 export interface ApiResponsePageViewingScheduleResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: PageViewingScheduleResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

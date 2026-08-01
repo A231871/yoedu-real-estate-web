@@ -18,9 +18,9 @@
 import type { ListingStatusResponse } from './listing-status-response';
 
 export interface ApiResponseListingStatusResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: ListingStatusResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

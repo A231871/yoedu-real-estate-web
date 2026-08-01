@@ -15,9 +15,9 @@
 
 
 export interface ApiResponseString {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: string;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

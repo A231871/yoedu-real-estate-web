@@ -18,9 +18,9 @@
 import type { PropertyTypeResponse } from './property-type-response';
 
 export interface ApiResponsePropertyTypeResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: PropertyTypeResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

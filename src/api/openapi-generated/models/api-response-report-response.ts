@@ -18,9 +18,9 @@
 import type { ReportResponse } from './report-response';
 
 export interface ApiResponseReportResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: ReportResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

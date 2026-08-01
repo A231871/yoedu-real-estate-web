@@ -18,9 +18,9 @@
 import type { PageNotificationResponse } from './page-notification-response';
 
 export interface ApiResponsePageNotificationResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: PageNotificationResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

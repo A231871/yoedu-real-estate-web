@@ -18,9 +18,9 @@
 import type { PageReportResponse } from './page-report-response';
 
 export interface ApiResponsePageReportResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: PageReportResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

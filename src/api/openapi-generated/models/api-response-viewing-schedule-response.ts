@@ -18,9 +18,9 @@
 import type { ViewingScheduleResponse } from './viewing-schedule-response';
 
 export interface ApiResponseViewingScheduleResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: ViewingScheduleResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

@@ -6,6 +6,7 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
+// TODO: Fix it later when we use it
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();

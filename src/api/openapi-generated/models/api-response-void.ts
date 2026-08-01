@@ -15,9 +15,9 @@
 
 
 export interface ApiResponseVoid {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: any;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

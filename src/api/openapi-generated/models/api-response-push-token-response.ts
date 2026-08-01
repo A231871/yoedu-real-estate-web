@@ -18,9 +18,9 @@
 import type { PushTokenResponse } from './push-token-response';
 
 export interface ApiResponsePushTokenResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: PushTokenResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

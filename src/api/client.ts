@@ -36,9 +36,11 @@ globalAxios.interceptors.response.use(
   }
 );
 
+// Configure the global Axios instance
 const configuration = new Configuration({
   basePath: "http://localhost:8080/api"
 });
+globalAxios.defaults.withCredentials = true
 
 // Export API controllers
 export const authenticationApi = new AuthenticationApi(configuration);

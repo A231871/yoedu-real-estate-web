@@ -18,9 +18,9 @@
 import type { GdprPurgeResponse } from './gdpr-purge-response';
 
 export interface ApiResponseGdprPurgeResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: GdprPurgeResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

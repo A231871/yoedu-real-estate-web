@@ -18,9 +18,9 @@
 import type { ReviewResponse } from './review-response';
 
 export interface ApiResponseReviewResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: ReviewResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

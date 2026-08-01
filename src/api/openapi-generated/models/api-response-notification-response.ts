@@ -18,9 +18,9 @@
 import type { NotificationResponse } from './notification-response';
 
 export interface ApiResponseNotificationResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: NotificationResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

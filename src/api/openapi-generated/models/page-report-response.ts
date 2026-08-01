@@ -26,14 +26,14 @@ import type { SortObject } from './sort-object';
 export interface PageReportResponse {
     'totalElements'?: number;
     'totalPages'?: number;
+    'pageable'?: PageableObject;
+    'first'?: boolean;
+    'last'?: boolean;
     'size'?: number;
     'content'?: Array<ReportResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'first'?: boolean;
-    'last'?: boolean;
     'numberOfElements'?: number;
-    'pageable'?: PageableObject;
     'empty'?: boolean;
 }
 

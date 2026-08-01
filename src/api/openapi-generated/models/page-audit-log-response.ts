@@ -26,14 +26,14 @@ import type { SortObject } from './sort-object';
 export interface PageAuditLogResponse {
     'totalElements'?: number;
     'totalPages'?: number;
+    'pageable'?: PageableObject;
+    'first'?: boolean;
+    'last'?: boolean;
     'size'?: number;
     'content'?: Array<AuditLogResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'first'?: boolean;
-    'last'?: boolean;
     'numberOfElements'?: number;
-    'pageable'?: PageableObject;
     'empty'?: boolean;
 }
 

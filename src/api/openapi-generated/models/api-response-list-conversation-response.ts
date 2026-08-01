@@ -18,9 +18,9 @@
 import type { ConversationResponse } from './conversation-response';
 
 export interface ApiResponseListConversationResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: Array<ConversationResponse>;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

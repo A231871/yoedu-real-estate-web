@@ -24,14 +24,14 @@ import type { PageableObject } from './pageable-object';
 import type { SortObject } from './sort-object';
 
 export interface SliceMessageResponse {
+    'pageable'?: PageableObject;
+    'first'?: boolean;
+    'last'?: boolean;
     'size'?: number;
     'content'?: Array<MessageResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'first'?: boolean;
-    'last'?: boolean;
     'numberOfElements'?: number;
-    'pageable'?: PageableObject;
     'empty'?: boolean;
 }
 

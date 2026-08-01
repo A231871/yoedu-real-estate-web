@@ -18,9 +18,9 @@
 import type { FavoriteResponse } from './favorite-response';
 
 export interface ApiResponseFavoriteResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: FavoriteResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

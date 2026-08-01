@@ -18,9 +18,9 @@
 import type { AmenityResponse } from './amenity-response';
 
 export interface ApiResponseListAmenityResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: Array<AmenityResponse>;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

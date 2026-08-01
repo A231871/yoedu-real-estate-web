@@ -20,5 +20,6 @@ export interface PropertyTypeResponse {
     'slug'?: string;
     'icon'?: string;
     'sortOrder'?: number;
+    'isActive'?: boolean;
 }
 

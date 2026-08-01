@@ -18,9 +18,9 @@
 import type { PageListingSummaryResponse } from './page-listing-summary-response';
 
 export interface ApiResponsePageListingSummaryResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: PageListingSummaryResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

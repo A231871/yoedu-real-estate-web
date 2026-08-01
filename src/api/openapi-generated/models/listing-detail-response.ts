@@ -42,6 +42,7 @@ export interface ListingDetailResponse {
 export const ListingDetailResponseStatusEnum = {
     Approved: 'APPROVED',
     Pending: 'PENDING',
+    Suspended: 'SUSPENDED',
 } as const;
 
 export type ListingDetailResponseStatusEnum = typeof ListingDetailResponseStatusEnum[keyof typeof ListingDetailResponseStatusEnum];

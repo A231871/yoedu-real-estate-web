@@ -14,9 +14,19 @@
 
 
 
+export * from './clients/admin-moderation-api';
+export * from './clients/admin-property-types-api';
 export * from './clients/amenity-controller-api';
+export * from './clients/authentication-api';
+export * from './clients/favorites-api';
 export * from './clients/listing-controller-api';
+export * from './clients/listing-views-api';
 export * from './clients/location-controller-api';
+export * from './clients/messaging-api';
+export * from './clients/notifications-api';
 export * from './clients/property-type-controller-api';
+export * from './clients/push-notifications-api';
+export * from './clients/reviews-api';
 export * from './clients/user-profile-api';
+export * from './clients/viewing-schedules-api';
 

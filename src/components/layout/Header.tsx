@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { user, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -48,18 +50,36 @@ export default function Header() {
 
         {/* Right: Auth + CTA */}
         <div className="flex items-center gap-5">
-          <Link
-            to="/auth"
-            className="hidden md:block text-[12px] leading-[1] font-semibold tracking-[0.05em] text-primary uppercase hover:underline transition-all"
-          >
-            Đăng nhập
-          </Link>
-          <Link
-            to="/auth"
-            className="hidden md:block px-6 py-2 border border-primary text-[12px] leading-[1] font-semibold tracking-[0.05em] uppercase transition-all hover:bg-primary hover:text-on-primary"
-          >
-            Đăng ký
-          </Link>
+          {isAuthenticated ? (
+            <div className="hidden md:flex items-center gap-4">
+              <span className="text-[14px] text-primary font-medium flex items-center gap-1">
+                <span className="material-symbols-outlined text-[18px]">account_circle</span>
+                {user?.email}
+              </span>
+              <button
+                onClick={logout}
+                className="text-[12px] leading-[1] font-semibold tracking-[0.05em] text-secondary uppercase hover:text-primary transition-colors"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link
+                to="/auth?mode=login"
+                className="hidden md:block text-[12px] leading-[1] font-semibold tracking-[0.05em] text-primary uppercase hover:underline transition-all"
+              >
+                Đăng nhập
+              </Link>
+              <Link
+                to="/auth?mode=register"
+                className="hidden md:block px-6 py-2 border border-primary text-[12px] leading-[1] font-semibold tracking-[0.05em] uppercase transition-all hover:bg-primary hover:text-on-primary"
+              >
+                Đăng ký
+              </Link>
+            </>
+          )}
+
           <button className="bg-primary text-on-primary px-6 py-3 text-[12px] leading-[1] font-semibold tracking-[0.05em] uppercase transition-all active:scale-95 duration-100">
             Đăng tin
           </button>
@@ -84,9 +104,24 @@ export default function Header() {
           <Link to="/cho-thue" onClick={() => setMobileOpen(false)} className="text-[16px] text-on-surface hover:text-primary transition-colors">
             Nhà đất cho thuê
           </Link>
-          <Link to="/auth" onClick={() => setMobileOpen(false)} className="text-[16px] text-on-surface hover:text-primary transition-colors">
-            Đăng nhập / Đăng ký
-          </Link>
+          {isAuthenticated ? (
+            <div className="flex flex-col gap-2 pt-2 border-t border-outline-variant">
+              <span className="text-[14px] text-primary font-medium">{user?.email}</span>
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileOpen(false);
+                }}
+                className="text-left text-[14px] text-secondary hover:text-primary transition-colors"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          ) : (
+            <Link to="/auth?mode=login" onClick={() => setMobileOpen(false)} className="text-[16px] text-on-surface hover:text-primary transition-colors">
+              Đăng nhập / Đăng ký
+            </Link>
+          )}
         </div>
       )}
     </header>

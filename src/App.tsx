@@ -6,24 +6,31 @@ import PropertiesSale from './pages/PropertiesSale';
 import PropertiesRent from './pages/PropertiesRent';
 import PropertyDetail from './pages/PropertyDetail';
 import Auth from './pages/Auth';
+import VerifyEmail from './pages/VerifyEmail';
+import RegisterSuccess from './pages/RegisterSuccess';
+import { AuthProvider } from './context/auth/AuthProvider';
 
 const queryClient = new QueryClient();
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/ban" element={<PropertiesSale />} />
-          <Route path="/cho-thue" element={<PropertiesRent />} />
-          <Route path="/chi-tiet/:id" element={<PropertyDetail />} />
-          <Route path="/auth" element={<Auth />} />
-          {/* Fallback → Home */}
-          <Route path="*" element={<Home />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/ban" element={<PropertiesSale />} />
+            <Route path="/cho-thue" element={<PropertiesRent />} />
+            <Route path="/chi-tiet/:id" element={<PropertyDetail />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth/verify" element={<VerifyEmail />} />
+            <Route path="/auth/register-success" element={<RegisterSuccess />} />
+            {/* Fallback → Home */}
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

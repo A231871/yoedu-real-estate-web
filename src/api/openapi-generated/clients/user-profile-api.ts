@@ -37,7 +37,7 @@ export const UserProfileApiAxiosParamCreator = function (configuration?: Configu
          * @throws {RequiredError}
          */
         getProfile: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/users/profile`;
+            const localVarPath = `/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -74,7 +74,7 @@ export const UserProfileApiAxiosParamCreator = function (configuration?: Configu
         updateProfile: async (updateProfileRequest: UpdateProfileRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'updateProfileRequest' is not null or undefined
             assertParamExists('updateProfile', 'updateProfileRequest', updateProfileRequest)
-            const localVarPath = `/api/users/profile`;
+            const localVarPath = `/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;

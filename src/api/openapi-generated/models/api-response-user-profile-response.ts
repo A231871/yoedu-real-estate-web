@@ -18,9 +18,9 @@
 import type { UserProfileResponse } from './user-profile-response';
 
 export interface ApiResponseUserProfileResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: UserProfileResponse;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

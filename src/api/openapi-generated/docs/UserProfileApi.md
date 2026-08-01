@@ -4,8 +4,8 @@ All URIs are relative to *http://localhost:8080/api*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**getProfile**](#getprofile) | **GET** /api/users/profile | Get User Profile|
-|[**updateProfile**](#updateprofile) | **PUT** /api/users/profile | Update User Profile|
+|[**getProfile**](#getprofile) | **GET** /users | Get User Profile|
+|[**updateProfile**](#updateprofile) | **PUT** /users | Update User Profile|
 
 # **getProfile**
 > ApiResponseUserProfileResponse getProfile()

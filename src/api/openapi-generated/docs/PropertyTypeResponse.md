@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **slug** | **string** |  | [optional] [default to undefined]
 **icon** | **string** |  | [optional] [default to undefined]
 **sortOrder** | **number** |  | [optional] [default to undefined]
+**isActive** | **boolean** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -22,6 +23,7 @@ const instance: PropertyTypeResponse = {
     slug,
     icon,
     sortOrder,
+    isActive,
 };
 ```
 

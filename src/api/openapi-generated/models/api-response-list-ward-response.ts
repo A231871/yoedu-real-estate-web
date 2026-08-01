@@ -18,9 +18,9 @@
 import type { WardResponse } from './ward-response';
 
 export interface ApiResponseListWardResponse {
-    'success'?: boolean;
-    'message'?: string;
+    'success': boolean;
+    'message': string;
     'data'?: Array<WardResponse>;
-    'timestamp'?: string;
+    'timestamp': string;
 }
 

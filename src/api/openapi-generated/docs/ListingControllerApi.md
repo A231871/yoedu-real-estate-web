@@ -180,12 +180,38 @@ let listingType: 'FOR_SALE' | 'FOR_RENT'; // (default to undefined)
 let page: number; //Zero-based page index (0..N) (optional) (default to 0)
 let size: number; //The size of the page to be returned (optional) (default to 20)
 let sort: Array<string>; //Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. (optional) (default to undefined)
+let minPrice: number; // (optional) (default to undefined)
+let maxPrice: number; // (optional) (default to undefined)
+let minBedrooms: number; // (optional) (default to undefined)
+let maxBedrooms: number; // (optional) (default to undefined)
+let minBathrooms: number; // (optional) (default to undefined)
+let maxBathrooms: number; // (optional) (default to undefined)
+let minArea: number; // (optional) (default to undefined)
+let maxArea: number; // (optional) (default to undefined)
+let propertyTypeId: number; // (optional) (default to undefined)
+let title: string; // (optional) (default to undefined)
+let provinceCode: string; // (optional) (default to undefined)
+let wardCode: string; // (optional) (default to undefined)
+let amenityIds: Array<number>; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.getListings(
     listingType,
     page,
     size,
-    sort
+    sort,
+    minPrice,
+    maxPrice,
+    minBedrooms,
+    maxBedrooms,
+    minBathrooms,
+    maxBathrooms,
+    minArea,
+    maxArea,
+    propertyTypeId,
+    title,
+    provinceCode,
+    wardCode,
+    amenityIds
 );
 ```
 
@@ -197,6 +223,19 @@ const { status, data } = await apiInstance.getListings(
 | **page** | [**number**] | Zero-based page index (0..N) | (optional) defaults to 0|
 | **size** | [**number**] | The size of the page to be returned | (optional) defaults to 20|
 | **sort** | **Array&lt;string&gt;** | Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. | (optional) defaults to undefined|
+| **minPrice** | [**number**] |  | (optional) defaults to undefined|
+| **maxPrice** | [**number**] |  | (optional) defaults to undefined|
+| **minBedrooms** | [**number**] |  | (optional) defaults to undefined|
+| **maxBedrooms** | [**number**] |  | (optional) defaults to undefined|
+| **minBathrooms** | [**number**] |  | (optional) defaults to undefined|
+| **maxBathrooms** | [**number**] |  | (optional) defaults to undefined|
+| **minArea** | [**number**] |  | (optional) defaults to undefined|
+| **maxArea** | [**number**] |  | (optional) defaults to undefined|
+| **propertyTypeId** | [**number**] |  | (optional) defaults to undefined|
+| **title** | [**string**] |  | (optional) defaults to undefined|
+| **provinceCode** | [**string**] |  | (optional) defaults to undefined|
+| **wardCode** | [**string**] |  | (optional) defaults to undefined|
+| **amenityIds** | **Array&lt;number&gt;** |  | (optional) defaults to undefined|
 
 
 ### Return type

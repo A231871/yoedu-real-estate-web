@@ -1,12 +1,17 @@
 import { useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { MapPin, Heart, User } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import PropertyCard from '@/components/card/PropertyCard';
-import { getListingDetail, getListingSummaries } from '@/data/listing';
-import { formatPrice } from '@/utils/format';
+import { getListingDetail, getListingSummaries } from '@/lib/data/listing';
+import { formatPrice } from '@/lib/utils/format';
+import { cn } from '@/lib/utils/cn';
+import { ICONS } from '@/lib/utils/icons';
 import { ListingDetailResponseListingTypeEnum } from '@/api/openapi-generated';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';
 
@@ -59,9 +64,7 @@ export default function PropertyDetail() {
         <Header />
         <div className="pt-40 text-center py-32">
           <h1 className="text-[40px] font-medium text-primary mb-6">Không tìm thấy bất động sản</h1>
-          <button onClick={() => navigate(-1)} className="bg-primary text-on-primary px-8 py-3 text-sm font-semibold uppercase rounded-sm">
-            Quay lại
-          </button>
+          <Button onClick={() => navigate(-1)}>Quay lại</Button>
         </div>
         <Footer />
       </>
@@ -96,9 +99,9 @@ export default function PropertyDetail() {
     }) ?? [])
   ];
 
-  const formattedPrice = formatPrice(property.currentPrice, property.listingType);
-  const pricePerSqm = property.currentPrice && property.area && property.area > 0
-    ? Math.round(property.currentPrice / property.area).toLocaleString('vi-VN')
+  const formattedPrice = formatPrice(property.amountVND, property.listingType);
+  const pricePerSqm = property.amountVND && property.area && property.area > 0
+    ? Math.round(property.amountVND / property.area).toLocaleString('vi-VN')
     : null;
 
   return (
@@ -153,32 +156,32 @@ export default function PropertyDetail() {
               <h1 className="text-[32px] md:text-[48px] font-medium leading-[1.2] tracking-[-0.01em] text-primary">
                 {property.title}
               </h1>
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setFavorited((f) => !f)}
-                className="flex-shrink-0 p-3 border border-outline-variant hover:bg-surface-container-low transition-colors rounded-sm"
+                className="flex-shrink-0 border border-outline-variant hover:bg-surface-container-low rounded-sm"
                 aria-label="Yêu thích"
               >
-                <span
-                  className="material-symbols-outlined text-[24px] text-primary"
-                  style={{ fontVariationSettings: favorited ? "'FILL' 1" : "'FILL' 0" }}
-                >
-                  favorite
-                </span>
-              </button>
+                <Heart className={cn('size-6 text-primary', favorited && 'fill-current')} />
+              </Button>
             </div>
 
             <p className="flex items-center gap-2 text-[16px] text-secondary mb-6">
-              <span className="material-symbols-outlined text-[18px]">location_on</span>
+              <MapPin className="size-[18px]" />
               <span>{locationStr}</span>
             </p>
 
             <div className="grid grid-cols-3 gap-4 py-6 border-y border-outline-variant mb-8">
-              {AMENITIES.slice(0, 3).map((a) => (
-                <div key={a.icon} className="flex flex-col items-center gap-2 text-center">
-                  <span className="material-symbols-outlined text-[28px] text-primary">{a.icon}</span>
-                  <span className="text-[14px] font-semibold text-secondary">{a.label}</span>
-                </div>
-              ))}
+              {AMENITIES.slice(0, 3).map((a) => {
+                const Icon = ICONS[a.icon];
+                return (
+                  <div key={a.icon} className="flex flex-col items-center gap-2 text-center">
+                    <Icon className="size-7 text-primary" />
+                    <span className="text-[14px] font-semibold text-secondary">{a.label}</span>
+                  </div>
+                );
+              })}
             </div>
 
             <section className="mb-12">
@@ -192,12 +195,15 @@ export default function PropertyDetail() {
               <section>
                 <h2 className="text-[24px] font-semibold text-primary mb-6">Tiện ích</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {AMENITIES.map((a) => (
-                    <div key={a.label} className="flex items-center gap-3 py-3 px-4 border border-outline-variant rounded-sm">
-                      <span className="material-symbols-outlined text-primary text-[22px]">{a.icon}</span>
-                      <span className="text-[16px] text-secondary">{a.label}</span>
-                    </div>
-                  ))}
+                  {AMENITIES.map((a) => {
+                    const Icon = ICONS[a.icon];
+                    return (
+                      <div key={a.label} className="flex items-center gap-3 py-3 px-4 border border-outline-variant rounded-sm">
+                        <Icon className="size-[22px] text-primary" />
+                        <span className="text-[16px] text-secondary">{a.label}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </section>
             )}
@@ -205,24 +211,20 @@ export default function PropertyDetail() {
 
           {/* Sidebar */}
           <div className="h-fit sticky top-28">
-            <div className="border border-outline-variant p-8 rounded-lg bg-white">
+            <Card className="p-8 gap-0 bg-white">
               <p className="text-[32px] md:text-[40px] font-bold text-primary mb-2">{formattedPrice}</p>
               {pricePerSqm && (
                 <p className="text-[16px] text-secondary mb-8">
                   ~ {pricePerSqm} đ/m²
                 </p>
               )}
-              <button className="w-full bg-primary text-on-primary py-4 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase mb-4 hover:opacity-90 transition-all rounded-sm">
-                Liên hệ tư vấn
-              </button>
-              <button className="w-full border border-primary text-primary py-4 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase hover:bg-primary hover:text-on-primary transition-all mb-8 rounded-sm">
-                Đặt lịch xem nhà
-              </button>
+              <Button className="w-full mb-4">Liên hệ tư vấn</Button>
+              <Button variant="outline" className="w-full mb-8">Đặt lịch xem nhà</Button>
               <div className="border-t border-outline-variant pt-6 space-y-4">
                 <p className="text-[12px] font-semibold tracking-[0.05em] uppercase text-secondary">Nhà môi giới</p>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-surface-container-low flex items-center justify-center rounded-sm">
-                    <span className="material-symbols-outlined text-[28px] text-secondary">person</span>
+                    <User className="size-7 text-secondary" />
                   </div>
                   <div>
                     <p className="text-[16px] font-semibold text-primary">Yoedu Property</p>
@@ -230,7 +232,7 @@ export default function PropertyDetail() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
 
@@ -248,7 +250,7 @@ export default function PropertyDetail() {
                       title: p.title ?? '',
                       location: p.provinceName ?? '',
                       area: p.area ?? 0,
-                      price: p.currentPrice ?? 0,
+                      price: p.amountVND ?? 0,
                       image: p.thumbnails?.[0]?.url,
                       slug: p.slug,
                       listingType: p.listingType,

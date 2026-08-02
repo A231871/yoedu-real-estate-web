@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 **thumbnails** | [**Array&lt;ListingMediaDto&gt;**](ListingMediaDto.md) |  | [optional] [default to undefined]
 **area** | **number** |  | [optional] [default to undefined]
 **listingType** | **string** |  | [optional] [default to undefined]
-**currentPrice** | **number** |  | [optional] [default to undefined]
+**amountVND** | **number** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -33,7 +33,7 @@ const instance: ListingSummaryResponse = {
     thumbnails,
     area,
     listingType,
-    currentPrice,
+    amountVND,
 };
 ```
 

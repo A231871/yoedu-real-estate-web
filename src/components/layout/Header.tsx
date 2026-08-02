@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { Menu, CircleUserRound } from 'lucide-react';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -53,77 +62,74 @@ export default function Header() {
           {isAuthenticated ? (
             <div className="hidden md:flex items-center gap-4">
               <span className="text-[14px] text-primary font-medium flex items-center gap-1">
-                <span className="material-symbols-outlined text-[18px]">account_circle</span>
+                <CircleUserRound className="size-[18px]" />
                 {user?.email}
               </span>
-              <button
+              <Button
+                variant="link"
                 onClick={logout}
-                className="text-[12px] leading-[1] font-semibold tracking-[0.05em] text-secondary uppercase hover:text-primary transition-colors"
+                className="h-auto p-0 text-xs text-secondary hover:text-primary hover:no-underline"
               >
                 Đăng xuất
-              </button>
+              </Button>
             </div>
           ) : (
             <>
-              <Link
-                to="/auth?mode=login"
-                className="hidden md:block text-[12px] leading-[1] font-semibold tracking-[0.05em] text-primary uppercase hover:underline transition-all"
-              >
-                Đăng nhập
-              </Link>
-              <Link
-                to="/auth?mode=register"
-                className="hidden md:block px-6 py-2 border border-primary text-[12px] leading-[1] font-semibold tracking-[0.05em] uppercase transition-all hover:bg-primary hover:text-on-primary"
-              >
-                Đăng ký
-              </Link>
+              <Button asChild variant="link" className="hidden md:inline-flex uppercase tracking-[0.05em] text-xs">
+                <Link to="/auth?mode=login">Đăng nhập</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="hidden md:inline-flex">
+                <Link to="/auth?mode=register">Đăng ký</Link>
+              </Button>
             </>
           )}
 
-          <button className="bg-primary text-on-primary px-6 py-3 text-[12px] leading-[1] font-semibold tracking-[0.05em] uppercase transition-all active:scale-95 duration-100">
-            Đăng tin
-          </button>
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden flex items-center"
-            aria-label="Menu"
-          >
-            <span className="material-symbols-outlined">
-              {mobileOpen ? 'close' : 'menu'}
-            </span>
-          </button>
+          <Button>Đăng tin</Button>
+
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden" aria-label="Menu">
+                <Menu />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="bg-surface-container-lowest">
+              <SheetHeader>
+                <SheetTitle className="text-left">
+                  <Link to="/" onClick={() => setMobileOpen(false)} className="inline-flex items-center">
+                    <img src="/logo.webp" alt="YOEDU Logo" className="h-12 w-auto" />
+                  </Link>
+                </SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col gap-4 px-4">
+                <Link to="/ban" onClick={() => setMobileOpen(false)} className="text-[16px] text-on-surface hover:text-primary transition-colors">
+                  Nhà đất bán
+                </Link>
+                <Link to="/cho-thue" onClick={() => setMobileOpen(false)} className="text-[16px] text-on-surface hover:text-primary transition-colors">
+                  Nhà đất cho thuê
+                </Link>
+                {isAuthenticated ? (
+                  <div className="flex flex-col gap-2 pt-4 border-t border-outline-variant">
+                    <span className="text-[14px] text-primary font-medium">{user?.email}</span>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMobileOpen(false);
+                      }}
+                      className="text-left text-[14px] text-secondary hover:text-primary transition-colors"
+                    >
+                      Đăng xuất
+                    </button>
+                  </div>
+                ) : (
+                  <Link to="/auth?mode=login" onClick={() => setMobileOpen(false)} className="text-[16px] text-on-surface hover:text-primary transition-colors">
+                    Đăng nhập / Đăng ký
+                  </Link>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </nav>
-
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="md:hidden bg-surface-container-lowest border-t border-outline-variant px-5 py-6 flex flex-col gap-4">
-          <Link to="/ban" onClick={() => setMobileOpen(false)} className="text-[16px] text-on-surface hover:text-primary transition-colors">
-            Nhà đất bán
-          </Link>
-          <Link to="/cho-thue" onClick={() => setMobileOpen(false)} className="text-[16px] text-on-surface hover:text-primary transition-colors">
-            Nhà đất cho thuê
-          </Link>
-          {isAuthenticated ? (
-            <div className="flex flex-col gap-2 pt-2 border-t border-outline-variant">
-              <span className="text-[14px] text-primary font-medium">{user?.email}</span>
-              <button
-                onClick={() => {
-                  logout();
-                  setMobileOpen(false);
-                }}
-                className="text-left text-[14px] text-secondary hover:text-primary transition-colors"
-              >
-                Đăng xuất
-              </button>
-            </div>
-          ) : (
-            <Link to="/auth?mode=login" onClick={() => setMobileOpen(false)} className="text-[16px] text-on-surface hover:text-primary transition-colors">
-              Đăng nhập / Đăng ký
-            </Link>
-          )}
-        </div>
-      )}
     </header>
   );
 }

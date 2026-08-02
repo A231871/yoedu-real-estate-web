@@ -5,7 +5,7 @@ import {
   removeAccessToken,
   setUser,
   removeUser
-} from "@/data/client-storage";
+} from "@/lib/data/client-storage";
 
 async function setAuthSession(authData: AuthResponse) {
   if (!authData.accessToken) {

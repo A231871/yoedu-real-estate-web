@@ -19,4 +19,13 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // shadcn/ui-generated primitives follow upstream's convention of
+    // co-exporting a component with its cva variants function from the
+    // same file, which react-refresh/only-export-components flags.
+    files: ['src/components/ui/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])

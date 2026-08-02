@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **slug** | **string** |  | [optional] [default to undefined]
 **address** | **string** |  | [optional] [default to undefined]
 **area** | **number** |  | [optional] [default to undefined]
-**currentPrice** | **number** |  | [optional] [default to undefined]
+**amountVND** | **number** |  | [optional] [default to undefined]
 **listingType** | **string** |  | [optional] [default to undefined]
 **propertyTypeName** | **string** |  | [optional] [default to undefined]
 **ownerId** | **string** |  | [optional] [default to undefined]
@@ -29,7 +29,7 @@ const instance: ModerationListingSummaryResponse = {
     slug,
     address,
     area,
-    currentPrice,
+    amountVND,
     listingType,
     propertyTypeName,
     ownerId,

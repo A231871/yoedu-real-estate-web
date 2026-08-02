@@ -34,7 +34,7 @@ export interface ListingDetailResponse {
     'propertyType'?: string;
     'province'?: string;
     'ward'?: string;
-    'currentPrice'?: number;
+    'amountVND'?: number;
     'listingMediaDtos'?: Array<ListingMediaDto>;
     'amenities'?: Array<string>;
 }

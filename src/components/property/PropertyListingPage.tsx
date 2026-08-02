@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Search, LayoutGrid, List } from 'lucide-react';
@@ -113,6 +113,21 @@ export default function PropertyListingPage({ listingType, eyebrow, title }: Pro
   const sort = sortParam && sortParam in SORT_MAP ? sortParam : DEFAULT_SORT;
   const page = Math.max(1, Number(searchParams.get('page') ?? '1'));
   const search = searchParams.get('q') ?? '';
+  const [searchInput, setSearchInput] = useState(search);
+
+  // Keep local input in sync when 'q' changes from elsewhere (chip removal, back/forward).
+  useEffect(() => {
+    setSearchInput(search);
+  }, [search]);
+
+  // Debounce writing the query into the URL so typing doesn't navigate on every keystroke
+  // (that navigation was interrupting IME/diacritic composition, e.g. Vietnamese input).
+  useEffect(() => {
+    if (searchInput === search) return;
+    const timeout = setTimeout(() => handleSearchChange(searchInput), 300);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchInput]);
 
   const commitFilters = (newFilters: ListingFilters) => {
     const next = new URLSearchParams(searchParams);
@@ -169,10 +184,10 @@ export default function PropertyListingPage({ listingType, eyebrow, title }: Pro
   const totalPages = data?.totalPages ?? 0;
 
   const displayedListings = useMemo(() => {
-    if (!search) return listings;
-    const q = search.toLowerCase();
+    if (!searchInput) return listings;
+    const q = searchInput.toLowerCase();
     return listings.filter((p) => p.title?.toLowerCase().includes(q));
-  }, [listings, search]);
+  }, [listings, searchInput]);
 
   const { data: provinces = [] } = useQuery({ queryKey: ['provinces'], queryFn: getProvinces });
   const { data: wards = [] } = useQuery({
@@ -280,8 +295,8 @@ export default function PropertyListingPage({ listingType, eyebrow, title }: Pro
               <div className="flex items-center border border-outline-variant px-4 gap-3 bg-white">
                 <Search className="size-[18px] text-secondary shrink-0" />
                 <Input
-                  value={search}
-                  onChange={(e) => handleSearchChange(e.target.value)}
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
                   placeholder="Tìm kiếm..."
                   className="border-none p-0 h-auto shadow-none py-3 text-[16px] text-on-surface bg-transparent w-52"
                 />
@@ -344,7 +359,7 @@ export default function PropertyListingPage({ listingType, eyebrow, title }: Pro
             {/* Result Count */}
             {!isLoading && !isError && (
               <p className="text-[16px] text-secondary mb-8">
-                {search ? (
+                {searchInput ? (
                   <>
                     Hiển thị <span className="font-semibold text-primary">{displayedListings.length}</span> bất động sản
                   </>

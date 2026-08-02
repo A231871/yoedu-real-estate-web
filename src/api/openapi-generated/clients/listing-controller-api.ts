@@ -160,13 +160,14 @@ export const ListingControllerApiAxiosParamCreator = function (configuration?: C
          * @param {number} [maxBathrooms] 
          * @param {number} [minArea] 
          * @param {number} [maxArea] 
+         * @param {string} [title] 
          * @param {string} [provinceCode] 
          * @param {string} [wardCode] 
          * @param {Array<number>} [amenityIds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getListings: async (listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, minPrice?: number, maxPrice?: number, minBedrooms?: number, maxBedrooms?: number, minBathrooms?: number, maxBathrooms?: number, minArea?: number, maxArea?: number, provinceCode?: string, wardCode?: string, amenityIds?: Array<number>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getListings: async (listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, minPrice?: number, maxPrice?: number, minBedrooms?: number, maxBedrooms?: number, minBathrooms?: number, maxBathrooms?: number, minArea?: number, maxArea?: number, title?: string, provinceCode?: string, wardCode?: string, amenityIds?: Array<number>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'listingType' is not null or undefined
             assertParamExists('getListings', 'listingType', listingType)
             const localVarPath = `/listing`;
@@ -231,6 +232,10 @@ export const ListingControllerApiAxiosParamCreator = function (configuration?: C
 
             if (maxArea !== undefined) {
                 localVarQueryParameter['maxArea'] = maxArea;
+            }
+
+            if (title !== undefined) {
+                localVarQueryParameter['title'] = title;
             }
 
             if (provinceCode !== undefined) {
@@ -357,14 +362,15 @@ export const ListingControllerApiFp = function(configuration?: Configuration) {
          * @param {number} [maxBathrooms] 
          * @param {number} [minArea] 
          * @param {number} [maxArea] 
+         * @param {string} [title] 
          * @param {string} [provinceCode] 
          * @param {string} [wardCode] 
          * @param {Array<number>} [amenityIds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getListings(listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, minPrice?: number, maxPrice?: number, minBedrooms?: number, maxBedrooms?: number, minBathrooms?: number, maxBathrooms?: number, minArea?: number, maxArea?: number, provinceCode?: string, wardCode?: string, amenityIds?: Array<number>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePageListingSummaryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getListings(listingType, page, size, sort, minPrice, maxPrice, minBedrooms, maxBedrooms, minBathrooms, maxBathrooms, minArea, maxArea, provinceCode, wardCode, amenityIds, options);
+        async getListings(listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, minPrice?: number, maxPrice?: number, minBedrooms?: number, maxBedrooms?: number, minBathrooms?: number, maxBathrooms?: number, minArea?: number, maxArea?: number, title?: string, provinceCode?: string, wardCode?: string, amenityIds?: Array<number>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePageListingSummaryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getListings(listingType, page, size, sort, minPrice, maxPrice, minBedrooms, maxBedrooms, minBathrooms, maxBathrooms, minArea, maxArea, title, provinceCode, wardCode, amenityIds, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ListingControllerApi.getListings']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -425,7 +431,7 @@ export const ListingControllerApiFactory = function (configuration?: Configurati
          * @throws {RequiredError}
          */
         getListings(requestParameters: ListingControllerApiGetListingsRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePageListingSummaryResponse> {
-            return localVarFp.getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.minBedrooms, requestParameters.maxBedrooms, requestParameters.minBathrooms, requestParameters.maxBathrooms, requestParameters.minArea, requestParameters.maxArea, requestParameters.provinceCode, requestParameters.wardCode, requestParameters.amenityIds, options).then((request) => request(axios, basePath));
+            return localVarFp.getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.minBedrooms, requestParameters.maxBedrooms, requestParameters.minBathrooms, requestParameters.maxBathrooms, requestParameters.minArea, requestParameters.maxArea, requestParameters.title, requestParameters.provinceCode, requestParameters.wardCode, requestParameters.amenityIds, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -543,6 +549,8 @@ export interface ListingControllerApiGetListingsRequest {
 
     readonly maxArea?: number
 
+    readonly title?: string
+
     readonly provinceCode?: string
 
     readonly wardCode?: string
@@ -600,7 +608,7 @@ export class ListingControllerApi extends BaseAPI implements ListingControllerAp
      * @throws {RequiredError}
      */
     public getListings(requestParameters: ListingControllerApiGetListingsRequest, options?: RawAxiosRequestConfig) {
-        return ListingControllerApiFp(this.configuration).getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.minBedrooms, requestParameters.maxBedrooms, requestParameters.minBathrooms, requestParameters.maxBathrooms, requestParameters.minArea, requestParameters.maxArea, requestParameters.provinceCode, requestParameters.wardCode, requestParameters.amenityIds, options).then((request) => request(this.axios, this.basePath));
+        return ListingControllerApiFp(this.configuration).getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.minBedrooms, requestParameters.maxBedrooms, requestParameters.minBathrooms, requestParameters.maxBathrooms, requestParameters.minArea, requestParameters.maxArea, requestParameters.title, requestParameters.provinceCode, requestParameters.wardCode, requestParameters.amenityIds, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

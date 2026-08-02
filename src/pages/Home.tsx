@@ -138,12 +138,6 @@ export default function Home() {
                 Nhà đất nổi bật
               </h2>
             </div>
-            <a
-              href="/ban"
-              className="text-[12px] font-semibold leading-[1] tracking-[0.05em] border-b border-primary pb-1 uppercase hover:text-secondary hover:border-secondary transition-all"
-            >
-              Xem tất cả tài sản
-            </a>
           </div>
           {isLoading ? (
             <div className="py-20 text-center text-secondary text-[20px]">

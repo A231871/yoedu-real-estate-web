@@ -20,7 +20,7 @@ export interface ModerationListingSummaryResponse {
     'slug'?: string;
     'address'?: string;
     'area'?: number;
-    'currentPrice'?: number;
+    'amountVND'?: number;
     'listingType'?: string;
     'propertyTypeName'?: string;
     'ownerId'?: string;

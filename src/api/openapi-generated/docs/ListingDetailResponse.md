@@ -21,7 +21,7 @@ Name | Type | Description | Notes
 **propertyType** | **string** |  | [optional] [default to undefined]
 **province** | **string** |  | [optional] [default to undefined]
 **ward** | **string** |  | [optional] [default to undefined]
-**currentPrice** | **number** |  | [optional] [default to undefined]
+**amountVND** | **number** |  | [optional] [default to undefined]
 **listingMediaDtos** | [**Array&lt;ListingMediaDto&gt;**](ListingMediaDto.md) |  | [optional] [default to undefined]
 **amenities** | **Array&lt;string&gt;** |  | [optional] [default to undefined]
 
@@ -47,7 +47,7 @@ const instance: ListingDetailResponse = {
     propertyType,
     province,
     ward,
-    currentPrice,
+    amountVND,
     listingMediaDtos,
     amenities,
 };

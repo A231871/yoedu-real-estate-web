@@ -28,7 +28,7 @@ export interface ListingSummaryResponse {
     'thumbnails'?: Array<ListingMediaDto>;
     'area'?: number;
     'listingType'?: ListingSummaryResponseListingTypeEnum;
-    'currentPrice'?: number;
+    'amountVND'?: number;
 }
 
 export const ListingSummaryResponseListingTypeEnum = {

@@ -4,11 +4,11 @@ All URIs are relative to *http://localhost:8080/api*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**createReview**](#createreview) | **POST** /api/reviews | Create a verified review|
-|[**getListingFeedback**](#getlistingfeedback) | **GET** /api/reviews/listing/{listingId}/feedback | Get paginated feedback for a listing|
-|[**getReviews**](#getreviews) | **GET** /api/reviews | List reviews|
-|[**replyToReview**](#replytoreview) | **POST** /api/reviews/{reviewId}/reply | Host replies to a review|
-|[**reportListing**](#reportlisting) | **POST** /api/reports | Report a listing|
+|[**createReview**](#createreview) | **POST** /reviews | Create a verified review|
+|[**getListingFeedback**](#getlistingfeedback) | **GET** /reviews/listing/{listingId}/feedback | Get paginated feedback for a listing|
+|[**getReviews**](#getreviews) | **GET** /reviews | List reviews|
+|[**replyToReview**](#replytoreview) | **POST** /reviews/{reviewId}/reply | Host replies to a review|
+|[**reportListing**](#reportlisting) | **POST** /reports | Report a listing|
 
 # **createReview**
 > ApiResponseReviewResponse createReview(createReviewRequest)

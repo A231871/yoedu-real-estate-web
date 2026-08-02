@@ -152,10 +152,21 @@ export const ListingControllerApiAxiosParamCreator = function (configuration?: C
          * @param {number} [page] Zero-based page index (0..N)
          * @param {number} [size] The size of the page to be returned
          * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
+         * @param {number} [minBedrooms] 
+         * @param {number} [maxBedrooms] 
+         * @param {number} [minBathrooms] 
+         * @param {number} [maxBathrooms] 
+         * @param {number} [minArea] 
+         * @param {number} [maxArea] 
+         * @param {string} [provinceCode] 
+         * @param {string} [wardCode] 
+         * @param {Array<number>} [amenityIds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getListings: async (listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getListings: async (listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, minPrice?: number, maxPrice?: number, minBedrooms?: number, maxBedrooms?: number, minBathrooms?: number, maxBathrooms?: number, minArea?: number, maxArea?: number, provinceCode?: string, wardCode?: string, amenityIds?: Array<number>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'listingType' is not null or undefined
             assertParamExists('getListings', 'listingType', listingType)
             const localVarPath = `/listing`;
@@ -188,6 +199,50 @@ export const ListingControllerApiAxiosParamCreator = function (configuration?: C
 
             if (listingType !== undefined) {
                 localVarQueryParameter['listingType'] = listingType;
+            }
+
+            if (minPrice !== undefined) {
+                localVarQueryParameter['minPrice'] = minPrice;
+            }
+
+            if (maxPrice !== undefined) {
+                localVarQueryParameter['maxPrice'] = maxPrice;
+            }
+
+            if (minBedrooms !== undefined) {
+                localVarQueryParameter['minBedrooms'] = minBedrooms;
+            }
+
+            if (maxBedrooms !== undefined) {
+                localVarQueryParameter['maxBedrooms'] = maxBedrooms;
+            }
+
+            if (minBathrooms !== undefined) {
+                localVarQueryParameter['minBathrooms'] = minBathrooms;
+            }
+
+            if (maxBathrooms !== undefined) {
+                localVarQueryParameter['maxBathrooms'] = maxBathrooms;
+            }
+
+            if (minArea !== undefined) {
+                localVarQueryParameter['minArea'] = minArea;
+            }
+
+            if (maxArea !== undefined) {
+                localVarQueryParameter['maxArea'] = maxArea;
+            }
+
+            if (provinceCode !== undefined) {
+                localVarQueryParameter['provinceCode'] = provinceCode;
+            }
+
+            if (wardCode !== undefined) {
+                localVarQueryParameter['wardCode'] = wardCode;
+            }
+
+            if (amenityIds) {
+                localVarQueryParameter['amenityIds'] = amenityIds;
             }
 
             localVarHeaderParameter['Accept'] = '*/*';
@@ -294,11 +349,22 @@ export const ListingControllerApiFp = function(configuration?: Configuration) {
          * @param {number} [page] Zero-based page index (0..N)
          * @param {number} [size] The size of the page to be returned
          * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
+         * @param {number} [minBedrooms] 
+         * @param {number} [maxBedrooms] 
+         * @param {number} [minBathrooms] 
+         * @param {number} [maxBathrooms] 
+         * @param {number} [minArea] 
+         * @param {number} [maxArea] 
+         * @param {string} [provinceCode] 
+         * @param {string} [wardCode] 
+         * @param {Array<number>} [amenityIds] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getListings(listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePageListingSummaryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getListings(listingType, page, size, sort, options);
+        async getListings(listingType: GetListingsListingTypeEnum, page?: number, size?: number, sort?: Array<string>, minPrice?: number, maxPrice?: number, minBedrooms?: number, maxBedrooms?: number, minBathrooms?: number, maxBathrooms?: number, minArea?: number, maxArea?: number, provinceCode?: string, wardCode?: string, amenityIds?: Array<number>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePageListingSummaryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getListings(listingType, page, size, sort, minPrice, maxPrice, minBedrooms, maxBedrooms, minBathrooms, maxBathrooms, minArea, maxArea, provinceCode, wardCode, amenityIds, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ListingControllerApi.getListings']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -359,7 +425,7 @@ export const ListingControllerApiFactory = function (configuration?: Configurati
          * @throws {RequiredError}
          */
         getListings(requestParameters: ListingControllerApiGetListingsRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePageListingSummaryResponse> {
-            return localVarFp.getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, options).then((request) => request(axios, basePath));
+            return localVarFp.getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.minBedrooms, requestParameters.maxBedrooms, requestParameters.minBathrooms, requestParameters.maxBathrooms, requestParameters.minArea, requestParameters.maxArea, requestParameters.provinceCode, requestParameters.wardCode, requestParameters.amenityIds, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -460,6 +526,28 @@ export interface ListingControllerApiGetListingsRequest {
      * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     readonly sort?: Array<string>
+
+    readonly minPrice?: number
+
+    readonly maxPrice?: number
+
+    readonly minBedrooms?: number
+
+    readonly maxBedrooms?: number
+
+    readonly minBathrooms?: number
+
+    readonly maxBathrooms?: number
+
+    readonly minArea?: number
+
+    readonly maxArea?: number
+
+    readonly provinceCode?: string
+
+    readonly wardCode?: string
+
+    readonly amenityIds?: Array<number>
 }
 
 /**
@@ -512,7 +600,7 @@ export class ListingControllerApi extends BaseAPI implements ListingControllerAp
      * @throws {RequiredError}
      */
     public getListings(requestParameters: ListingControllerApiGetListingsRequest, options?: RawAxiosRequestConfig) {
-        return ListingControllerApiFp(this.configuration).getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
+        return ListingControllerApiFp(this.configuration).getListings(requestParameters.listingType, requestParameters.page, requestParameters.size, requestParameters.sort, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.minBedrooms, requestParameters.maxBedrooms, requestParameters.minBathrooms, requestParameters.maxBathrooms, requestParameters.minArea, requestParameters.maxArea, requestParameters.provinceCode, requestParameters.wardCode, requestParameters.amenityIds, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

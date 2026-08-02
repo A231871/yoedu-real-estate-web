@@ -4,14 +4,33 @@ import {
   type ListingDetailResponse,
   type ListingSummaryResponse
 } from "@/api/openapi-generated";
+import type { GetListingsListingTypeEnum } from "@/api/openapi-generated/clients/listing-controller-api";
+
+export interface ListingFilters {
+  page?: number;
+  size?: number;
+  sort?: Array<string>;
+  minPrice?: number;
+  maxPrice?: number;
+  minBedrooms?: number;
+  maxBedrooms?: number;
+  minBathrooms?: number;
+  maxBathrooms?: number;
+  minArea?: number;
+  maxArea?: number;
+  provinceCode?: string;
+  wardCode?: string;
+  amenityIds?: Array<number>;
+}
 
 export async function getListingSummaries(
   listingType: ListingSummaryResponseListingTypeEnum,
-  page?: number,
-  size?: number,
-  sort?: Array<string>
+  filters: ListingFilters = {}
 ): Promise<ListingSummaryResponse[]> {
-  const { data } = await listingControllerApi.getListings({ listingType, page, size, sort });
+  const { data } = await listingControllerApi.getListings({
+    listingType: listingType as unknown as GetListingsListingTypeEnum,
+    ...filters,
+  });
   return data.data?.content?.filter((listing) => listing.listingType === listingType) ?? [];
 }
 

@@ -50,7 +50,7 @@ export const ReviewsApiAxiosParamCreator = function (configuration?: Configurati
         createReview: async (createReviewRequest: CreateReviewRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createReviewRequest' is not null or undefined
             assertParamExists('createReview', 'createReviewRequest', createReviewRequest)
-            const localVarPath = `/api/reviews`;
+            const localVarPath = `/reviews`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -92,7 +92,7 @@ export const ReviewsApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('getListingFeedback', 'listingId', listingId)
             // verify required parameter 'pageable' is not null or undefined
             assertParamExists('getListingFeedback', 'pageable', pageable)
-            const localVarPath = `/api/reviews/listing/{listingId}/feedback`
+            const localVarPath = `/reviews/listing/{listingId}/feedback`
                 .replace('{listingId}', encodeURIComponent(String(listingId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -138,7 +138,7 @@ export const ReviewsApiAxiosParamCreator = function (configuration?: Configurati
         getReviews: async (pageable: Pageable, listingId?: string, hostId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'pageable' is not null or undefined
             assertParamExists('getReviews', 'pageable', pageable)
-            const localVarPath = `/api/reviews`;
+            const localVarPath = `/reviews`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -192,7 +192,7 @@ export const ReviewsApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('replyToReview', 'reviewId', reviewId)
             // verify required parameter 'replyToReviewRequest' is not null or undefined
             assertParamExists('replyToReview', 'replyToReviewRequest', replyToReviewRequest)
-            const localVarPath = `/api/reviews/{reviewId}/reply`
+            const localVarPath = `/reviews/{reviewId}/reply`
                 .replace('{reviewId}', encodeURIComponent(String(reviewId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -232,7 +232,7 @@ export const ReviewsApiAxiosParamCreator = function (configuration?: Configurati
         reportListing: async (createReportRequest: CreateReportRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createReportRequest' is not null or undefined
             assertParamExists('reportListing', 'createReportRequest', createReportRequest)
-            const localVarPath = `/api/reports`;
+            const localVarPath = `/reports`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;

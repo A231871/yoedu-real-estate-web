@@ -27,11 +27,14 @@ function PasswordToggle({ show, onToggle }: { show: boolean; onToggle: () => voi
 }
 
 export default function Auth() {
-  // Read initial mode from URL once — after that, mode is pure local state
-  // so switching tabs never triggers a URL change (which Chrome intercepts to prompt "Save password?")
   const [searchParams] = useSearchParams();
-  const initialMode: Mode = searchParams.get('mode') === 'register' ? 'register' : 'login';
-  const [mode, setMode] = useState<Mode>(initialMode);
+  const urlMode: Mode = searchParams.get('mode') === 'register' ? 'register' : 'login';
+  const [mode, setMode] = useState<Mode>(urlMode);
+  const [syncedUrlMode, setSyncedUrlMode] = useState<Mode>(urlMode);
+  if (urlMode !== syncedUrlMode) {
+    setSyncedUrlMode(urlMode);
+    setMode(urlMode);
+  }
 
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');

@@ -6,13 +6,13 @@ import type {
   LoginRequest,
   RegisterRequest,
 } from '@/api/openapi-generated';
-import { getAccessToken, getUser } from '@/data/client-storage';
+import { getAccessToken, getUser } from '@/lib/data/client-storage';
 import {
   login as authLogin,
   register as authRegister,
   verify as authVerify,
   logout as authLogout,
-} from '@/data/auth';
+} from '@/lib/data/auth';
 export interface UseAuthResult {
   user: User | null;
   accessToken: string | null;

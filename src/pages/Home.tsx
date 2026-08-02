@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import PropertyCard from '@/components/card/PropertyCard';
-import { getListingSummaries } from '@/data/listing';
+import { getListingSummaries } from '@/lib/data/listing';
 import { ListingSummaryResponseListingTypeEnum } from '@/api/openapi-generated';
 
 const HERO_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAbC-yD8HsiROnP4hX1qac4cfAtbsxH-DsSA_9KmfwT5d8crmRc3j5iIIL8dMMevjsjVgqHECfPfCqnE4X9mN59UocsB4T4JpC4daaCLkzXOn933nik8Av-ByXf1CmZEdes3PECiI3koaBbkxaIcyzpPEg2Qk0Ol64UoM1LqkpXU4-0GkGbcIfdJGeZurfnCnK7KsH3J1mlv5aseqXuOOpqLyIagTaC_SqMkZ6j6XvzZUMf12vPrqLf8-ZUmR23vJA0gzvl4XXPQEg';

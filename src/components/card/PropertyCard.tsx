@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { formatPrice } from '@/utils/format';
+import { formatPrice } from '@/lib/utils/format';
 
 export interface PropertyCardData {
   id?: string;

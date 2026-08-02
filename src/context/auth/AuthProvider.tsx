@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { getUser } from '@/data/client-storage';
+import { getUser } from '@/lib/data/client-storage';
 import { AuthContext, type User } from './AuthContext';
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

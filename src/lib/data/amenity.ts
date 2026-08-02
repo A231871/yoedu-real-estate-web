@@ -1,4 +1,4 @@
-import { amenityControllerApi } from "../api/client";
+import { amenityControllerApi } from "@/api/client";
 import type { AmenityResponse } from "@/api/openapi-generated";
 
 export async function getAmenities(): Promise<AmenityResponse[]> {

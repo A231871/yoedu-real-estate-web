@@ -20,6 +20,8 @@ export interface ListingFilters {
   maxArea?: number;
   provinceCode?: string;
   wardCode?: string;
+  title?: string;
+  propertyTypeId?: number;
   amenityIds?: Array<number>;
 }
 

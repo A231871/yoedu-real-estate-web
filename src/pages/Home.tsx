@@ -6,10 +6,13 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import PropertyCard from '@/components/card/PropertyCard';
 import { getListingSummaries } from '@/lib/data/listing';
+import { getProvinces } from '@/lib/data/location';
+import { getPropertyTypes } from '@/lib/data/property-type';
 import { ListingSummaryResponseListingTypeEnum } from '@/api/openapi-generated';
 import { ICONS } from '@/lib/utils/icons';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Combobox } from '@/components/ui/combobox';
 import {
   Select,
   SelectContent,
@@ -40,9 +43,10 @@ const WHY_US = [
 
 export default function Home() {
   const navigate = useNavigate();
-  const [location, setLocation] = useState('');
-  const [type, setType] = useState('');
-  const [price, setPrice] = useState('');
+  const [provinceCode, setProvinceCode] = useState('');
+  const [propertyTypeId, setPropertyTypeId] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   const {
     data: listings = [],
@@ -54,11 +58,23 @@ export default function Home() {
       getListingSummaries(ListingSummaryResponseListingTypeEnum.ForSale),
   });
 
+  const { data: provinces = [] } = useQuery({ queryKey: ['provinces'], queryFn: getProvinces });
+  const { data: propertyTypes = [] } = useQuery({
+    queryKey: ['propertyTypes'],
+    queryFn: getPropertyTypes,
+  });
+
   const featured = listings.slice(0, 3);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/ban');
+    const params = new URLSearchParams();
+    if (provinceCode) params.set('provinceCode', provinceCode);
+    if (propertyTypeId) params.set('propertyTypeId', propertyTypeId);
+    if (minPrice) params.set('minPrice', minPrice);
+    if (maxPrice) params.set('maxPrice', maxPrice);
+    const qs = params.toString();
+    navigate(qs ? `/ban?${qs}` : '/ban');
   };
 
   return (
@@ -88,36 +104,52 @@ export default function Home() {
               >
                 <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-outline-variant py-1 gap-3">
                   <MapPin className="size-[18px] text-secondary shrink-0" />
-                  <Input
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    className="w-full border-none p-0 h-auto shadow-none focus-visible:border-none text-[16px] text-on-surface bg-transparent"
-                    placeholder="Nhập địa điểm"
-                    type="text"
+                  <Combobox
+                    value={provinceCode}
+                    onValueChange={setProvinceCode}
+                    options={provinces.map((p) => ({ value: p.code!, label: p.name! }))}
+                    placeholder="Chọn địa điểm"
+                    searchPlaceholder="Nhập địa điểm"
+                    emptyText="Không tìm thấy địa điểm"
+                    className="text-[16px] text-on-surface"
                   />
                 </div>
                 <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-outline-variant py-1 gap-3">
                   <House className="size-[18px] text-secondary shrink-0" />
-                  <Select value={type} onValueChange={setType}>
+                  <Select value={propertyTypeId} onValueChange={setPropertyTypeId}>
                     <SelectTrigger className="w-full border-none p-0 h-auto shadow-none text-[16px] text-on-surface">
                       <SelectValue placeholder="Loại nhà" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="apartment">Căn hộ</SelectItem>
-                      <SelectItem value="villa">Biệt thự</SelectItem>
-                      <SelectItem value="townhouse">Nhà phố</SelectItem>
+                      {propertyTypes.map((pt) => (
+                        <SelectItem key={pt.id} value={pt.id!}>
+                          {pt.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="flex-1 flex items-center px-4 py-1 gap-3">
                   <Banknote className="size-[18px] text-secondary shrink-0" />
-                  <Input
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="w-full border-none p-0 h-auto shadow-none focus-visible:border-none text-[16px] text-on-surface bg-transparent"
-                    placeholder="Mức giá"
-                    type="text"
-                  />
+                  <div className="flex items-center gap-2 w-full">
+                    <Input
+                      value={minPrice}
+                      onChange={(e) => setMinPrice(e.target.value)}
+                      className="w-full border-none p-0 h-auto shadow-none focus-visible:border-none text-[16px] text-on-surface bg-transparent"
+                      placeholder="Giá từ"
+                      type="number"
+                      inputMode="numeric"
+                    />
+                    <span className="text-secondary shrink-0">–</span>
+                    <Input
+                      value={maxPrice}
+                      onChange={(e) => setMaxPrice(e.target.value)}
+                      className="w-full border-none p-0 h-auto shadow-none focus-visible:border-none text-[16px] text-on-surface bg-transparent"
+                      placeholder="Giá đến"
+                      type="number"
+                      inputMode="numeric"
+                    />
+                  </div>
                 </div>
                 <Button type="submit" size="lg" className="whitespace-nowrap">
                   Tìm kiếm
@@ -157,7 +189,7 @@ export default function Home() {
                     title: p.title ?? '',
                     location: p.provinceName ?? '',
                     area: p.area ?? 0,
-                    price: p.currentPrice ?? 0,
+                    price: p.amountVND ?? 0,
                     image: p.thumbnails?.[0]?.url,
                     slug: p.slug,
                   }}

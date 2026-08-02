@@ -188,6 +188,7 @@ let minBathrooms: number; // (optional) (default to undefined)
 let maxBathrooms: number; // (optional) (default to undefined)
 let minArea: number; // (optional) (default to undefined)
 let maxArea: number; // (optional) (default to undefined)
+let propertyTypeId: number; // (optional) (default to undefined)
 let title: string; // (optional) (default to undefined)
 let provinceCode: string; // (optional) (default to undefined)
 let wardCode: string; // (optional) (default to undefined)
@@ -206,6 +207,7 @@ const { status, data } = await apiInstance.getListings(
     maxBathrooms,
     minArea,
     maxArea,
+    propertyTypeId,
     title,
     provinceCode,
     wardCode,
@@ -229,6 +231,7 @@ const { status, data } = await apiInstance.getListings(
 | **maxBathrooms** | [**number**] |  | (optional) defaults to undefined|
 | **minArea** | [**number**] |  | (optional) defaults to undefined|
 | **maxArea** | [**number**] |  | (optional) defaults to undefined|
+| **propertyTypeId** | [**number**] |  | (optional) defaults to undefined|
 | **title** | [**string**] |  | (optional) defaults to undefined|
 | **provinceCode** | [**string**] |  | (optional) defaults to undefined|
 | **wardCode** | [**string**] |  | (optional) defaults to undefined|

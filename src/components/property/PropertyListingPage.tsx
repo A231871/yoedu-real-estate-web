@@ -9,6 +9,7 @@ import PropertyFilterPanel from '@/components/property/PropertyFilterPanel';
 import { getListingSummariesPage, type ListingFilters } from '@/lib/data/listing';
 import { getProvinces, getWardsByProvinceCode } from '@/lib/data/location';
 import { getAmenities } from '@/lib/data/amenity';
+import { getPropertyTypes } from '@/lib/data/property-type';
 import { formatPrice } from '@/lib/utils/format';
 import { ListingSummaryResponseListingTypeEnum } from '@/api/openapi-generated';
 import { Input } from '@/components/ui/input';
@@ -61,6 +62,7 @@ const FILTER_KEYS = [
   'maxArea',
   'provinceCode',
   'wardCode',
+  'propertyTypeId',
 ] as const;
 
 function parseFiltersFromSearchParams(searchParams: URLSearchParams): ListingFilters {
@@ -78,6 +80,7 @@ function parseFiltersFromSearchParams(searchParams: URLSearchParams): ListingFil
     maxArea: num('maxArea'),
     provinceCode: searchParams.get('provinceCode') ?? undefined,
     wardCode: searchParams.get('wardCode') ?? undefined,
+    propertyTypeId: num('propertyTypeId'),
     amenityIds: amenityIdsRaw ? amenityIdsRaw.split(',').map(Number) : undefined,
   };
 }
@@ -168,11 +171,7 @@ export default function PropertyListingPage({ listingType, eyebrow, title }: Pro
   const displayedListings = useMemo(() => {
     if (!search) return listings;
     const q = search.toLowerCase();
-    return listings.filter(
-      (p) =>
-        p.title?.toLowerCase().includes(q) ||
-        p.provinceName?.toLowerCase().includes(q)
-    );
+    return listings.filter((p) => p.title?.toLowerCase().includes(q));
   }, [listings, search]);
 
   const { data: provinces = [] } = useQuery({ queryKey: ['provinces'], queryFn: getProvinces });
@@ -182,6 +181,7 @@ export default function PropertyListingPage({ listingType, eyebrow, title }: Pro
     enabled: !!filters.provinceCode,
   });
   const { data: amenities = [] } = useQuery({ queryKey: ['amenities'], queryFn: getAmenities });
+  const { data: propertyTypes = [] } = useQuery({ queryKey: ['propertyTypes'], queryFn: getPropertyTypes });
 
   const chips = useMemo(() => {
     const list: { key: string; label: string; onRemove: () => void }[] = [];
@@ -232,6 +232,16 @@ export default function PropertyListingPage({ listingType, eyebrow, title }: Pro
         onRemove: () => commitFilters({ ...filters, wardCode: undefined }),
       });
     }
+    if (filters.propertyTypeId !== undefined) {
+      const name =
+        propertyTypes.find((pt) => Number(pt.id) === filters.propertyTypeId)?.name ??
+        `Loại nhà #${filters.propertyTypeId}`;
+      list.push({
+        key: 'propertyType',
+        label: name,
+        onRemove: () => commitFilters({ ...filters, propertyTypeId: undefined }),
+      });
+    }
     if (filters.amenityIds?.length) {
       const names = filters.amenityIds
         .map((id) => amenities.find((a) => Number(a.id) === id)?.name)
@@ -245,7 +255,7 @@ export default function PropertyListingPage({ listingType, eyebrow, title }: Pro
 
     return list;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, listingType, provinces, wards, amenities]);
+  }, [filters, listingType, provinces, wards, amenities, propertyTypes]);
 
   return (
     <>

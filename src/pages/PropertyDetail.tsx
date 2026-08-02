@@ -99,9 +99,9 @@ export default function PropertyDetail() {
     }) ?? [])
   ];
 
-  const formattedPrice = formatPrice(property.currentPrice, property.listingType);
-  const pricePerSqm = property.currentPrice && property.area && property.area > 0
-    ? Math.round(property.currentPrice / property.area).toLocaleString('vi-VN')
+  const formattedPrice = formatPrice(property.amountVND, property.listingType);
+  const pricePerSqm = property.amountVND && property.area && property.area > 0
+    ? Math.round(property.amountVND / property.area).toLocaleString('vi-VN')
     : null;
 
   return (
@@ -250,7 +250,7 @@ export default function PropertyDetail() {
                       title: p.title ?? '',
                       location: p.provinceName ?? '',
                       area: p.area ?? 0,
-                      price: p.currentPrice ?? 0,
+                      price: p.amountVND ?? 0,
                       image: p.thumbnails?.[0]?.url,
                       slug: p.slug,
                       listingType: p.listingType,

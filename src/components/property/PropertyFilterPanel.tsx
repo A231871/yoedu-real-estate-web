@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { SlidersHorizontal } from 'lucide-react';
 import { getProvinces, getWardsByProvinceCode } from '@/lib/data/location';
 import { getAmenities } from '@/lib/data/amenity';
+import { getPropertyTypes } from '@/lib/data/property-type';
 import type { ListingFilters } from '@/lib/data/listing';
 import { ICONS } from '@/lib/utils/icons';
 import { Button } from '@/components/ui/button';
@@ -81,6 +82,7 @@ export default function PropertyFilterPanel({ filters, onApply, activeCount }: P
     enabled: !!draft.provinceCode,
   });
   const { data: amenities = [] } = useQuery({ queryKey: ['amenities'], queryFn: getAmenities });
+  const { data: propertyTypes = [] } = useQuery({ queryKey: ['propertyTypes'], queryFn: getPropertyTypes });
 
   const handleOpenChange = (next: boolean) => {
     if (next) setDraft(filters);
@@ -121,6 +123,31 @@ export default function PropertyFilterPanel({ filters, onApply, activeCount }: P
         </SheetHeader>
 
         <div className="flex flex-col gap-6 px-4">
+          {/* Property type */}
+          <div>
+            <Label className="mb-2">Loại bất động sản</Label>
+            <Select
+              value={draft.propertyTypeId !== undefined ? String(draft.propertyTypeId) : ANY}
+              onValueChange={(v) =>
+                setDraft((p) => ({ ...p, propertyTypeId: v === ANY ? undefined : Number(v) }))
+              }
+            >
+              <SelectTrigger className="w-full bg-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ANY}>Tất cả loại nhà</SelectItem>
+                {propertyTypes.map((pt) => (
+                  <SelectItem key={pt.id} value={pt.id!}>
+                    {pt.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Separator />
+
           {/* Price */}
           <div>
             <Label className="mb-2">Khoảng giá</Label>

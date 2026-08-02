@@ -1,11 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { MapPin, House, Banknote } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import PropertyCard from '@/components/card/PropertyCard';
 import { getListingSummaries } from '@/lib/data/listing';
 import { ListingSummaryResponseListingTypeEnum } from '@/api/openapi-generated';
+import { ICONS } from '@/lib/utils/icons';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const HERO_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAbC-yD8HsiROnP4hX1qac4cfAtbsxH-DsSA_9KmfwT5d8crmRc3j5iIIL8dMMevjsjVgqHECfPfCqnE4X9mN59UocsB4T4JpC4daaCLkzXOn933nik8Av-ByXf1CmZEdes3PECiI3koaBbkxaIcyzpPEg2Qk0Ol64UoM1LqkpXU4-0GkGbcIfdJGeZurfnCnK7KsH3J1mlv5aseqXuOOpqLyIagTaC_SqMkZ6j6XvzZUMf12vPrqLf8-ZUmR23vJA0gzvl4XXPQEg';
 
@@ -75,45 +86,42 @@ export default function Home() {
                 onSubmit={handleSearch}
                 className="bg-white p-2 flex flex-col md:flex-row gap-0 shadow-2xl"
               >
-                <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-outline-variant py-4 gap-3">
-                  <span className="material-symbols-outlined text-secondary">location_on</span>
-                  <input
+                <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-outline-variant py-1 gap-3">
+                  <MapPin className="size-[18px] text-secondary shrink-0" />
+                  <Input
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="w-full border-none outline-none text-[16px] text-on-surface bg-transparent"
+                    className="w-full border-none p-0 h-auto shadow-none focus-visible:border-none text-[16px] text-on-surface bg-transparent"
                     placeholder="Nhập địa điểm"
                     type="text"
                   />
                 </div>
-                <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-outline-variant py-4 gap-3">
-                  <span className="material-symbols-outlined text-secondary">home</span>
-                  <select
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                    className="w-full border-none outline-none text-[16px] text-on-surface bg-transparent appearance-none"
-                  >
-                    <option value="">Loại nhà</option>
-                    <option value="apartment">Căn hộ</option>
-                    <option value="villa">Biệt thự</option>
-                    <option value="townhouse">Nhà phố</option>
-                  </select>
+                <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-outline-variant py-1 gap-3">
+                  <House className="size-[18px] text-secondary shrink-0" />
+                  <Select value={type} onValueChange={setType}>
+                    <SelectTrigger className="w-full border-none p-0 h-auto shadow-none text-[16px] text-on-surface">
+                      <SelectValue placeholder="Loại nhà" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="apartment">Căn hộ</SelectItem>
+                      <SelectItem value="villa">Biệt thự</SelectItem>
+                      <SelectItem value="townhouse">Nhà phố</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <div className="flex-1 flex items-center px-4 py-4 gap-3">
-                  <span className="material-symbols-outlined text-secondary">payments</span>
-                  <input
+                <div className="flex-1 flex items-center px-4 py-1 gap-3">
+                  <Banknote className="size-[18px] text-secondary shrink-0" />
+                  <Input
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    className="w-full border-none outline-none text-[16px] text-on-surface bg-transparent"
+                    className="w-full border-none p-0 h-auto shadow-none focus-visible:border-none text-[16px] text-on-surface bg-transparent"
                     placeholder="Mức giá"
                     type="text"
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="bg-primary text-on-primary px-10 py-4 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase hover:opacity-90 transition-all whitespace-nowrap"
-                >
+                <Button type="submit" size="lg" className="whitespace-nowrap">
                   Tìm kiếm
-                </button>
+                </Button>
               </form>
             </div>
           </div>
@@ -183,17 +191,20 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-              {WHY_US.map((item) => (
-                <div key={item.icon} className="text-center group">
-                  <div className="w-16 h-16 bg-white border border-outline-variant flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                    <span className="material-symbols-outlined text-[30px]">{item.icon}</span>
+              {WHY_US.map((item) => {
+                const Icon = ICONS[item.icon];
+                return (
+                  <div key={item.icon} className="text-center group">
+                    <div className="w-16 h-16 bg-white border border-outline-variant flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                      <Icon className="size-[30px]" />
+                    </div>
+                    <h4 className="text-[24px] leading-[1.4] font-medium text-primary mb-4">
+                      {item.title}
+                    </h4>
+                    <p className="text-[16px] leading-[1.6] text-secondary">{item.desc}</p>
                   </div>
-                  <h4 className="text-[24px] leading-[1.4] font-medium text-primary mb-4">
-                    {item.title}
-                  </h4>
-                  <p className="text-[16px] leading-[1.6] text-secondary">{item.desc}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>

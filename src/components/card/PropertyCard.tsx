@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { MapPin, Heart } from 'lucide-react';
 import { formatPrice } from '@/lib/utils/format';
+import { cn } from '@/lib/utils/cn';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 export interface PropertyCardData {
   id?: string;
@@ -55,17 +60,16 @@ export default function PropertyCard({ property, layout = 'grid' }: PropertyCard
 
   if (layout === 'list') {
     return (
-      <div className="group flex flex-col sm:flex-row gap-0 bg-white border border-outline-variant hover:border-outline hover:shadow-[0px_4px_20px_rgba(0,0,0,0.05)] transition-all duration-300 rounded-lg overflow-hidden cursor-pointer">
+      <Card className="group flex-row gap-0 p-0 rounded-lg overflow-hidden hover:border-outline hover:shadow-[0px_4px_20px_rgba(0,0,0,0.05)] transition-all duration-300 cursor-pointer">
         <div className="relative w-full sm:w-64 md:w-72 h-48 sm:h-auto flex-shrink-0 overflow-hidden">
           <img
             src={imageUrl}
             alt={property.title || 'Property'}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          {/* Tag badge - styled according to DESIGN.md chips */}
-          <div className="absolute top-3 left-3 bg-surface-container/90 backdrop-blur-xs text-secondary px-3 py-1.5 text-[12px] leading-[1] font-semibold tracking-[0.05em] uppercase rounded-sm">
+          <Badge className="absolute top-3 left-3 bg-surface-container/90 backdrop-blur-xs">
             {tagText}
-          </div>
+          </Badge>
         </div>
         <div className="flex-1 p-6 flex flex-col justify-between gap-4">
           <div>
@@ -73,7 +77,7 @@ export default function PropertyCard({ property, layout = 'grid' }: PropertyCard
               {property.title}
             </h3>
             <p className="text-[14px] md:text-[16px] leading-[1.6] text-secondary flex items-center gap-1.5 mb-4">
-              <span className="material-symbols-outlined text-[18px]">location_on</span>
+              <MapPin className="size-[18px]" />
               <span>{property.location}</span>
             </p>
             {renderMetrics()}
@@ -82,15 +86,12 @@ export default function PropertyCard({ property, layout = 'grid' }: PropertyCard
             <p className="text-[20px] md:text-[24px] leading-[1.4] font-bold text-primary">
               {formatPrice(property.price, property.listingType, property.category || property.type)}
             </p>
-            <Link
-              to={`/chi-tiet/${property.id}`}
-              className="px-6 py-2 border border-primary text-[12px] leading-[1] font-semibold tracking-[0.05em] uppercase bg-transparent hover:bg-primary hover:text-on-primary transition-all rounded-sm"
-            >
-              Xem chi tiết
-            </Link>
+            <Button asChild variant="outline" size="sm">
+              <Link to={`/chi-tiet/${property.id}`}>Xem chi tiết</Link>
+            </Button>
           </div>
         </div>
-      </div>
+      </Card>
     );
   }
 
@@ -103,26 +104,22 @@ export default function PropertyCard({ property, layout = 'grid' }: PropertyCard
           alt={property.title || 'Property'}
           className="property-image w-full h-full object-cover"
         />
-        {/* Tag badge - styled according to DESIGN.md chips */}
-        <div className="absolute top-3 left-3 bg-surface-container/90 backdrop-blur-xs text-secondary px-3 py-1.5 text-[12px] leading-[1] font-semibold tracking-[0.05em] uppercase rounded-sm">
+        <Badge className="absolute top-3 left-3 bg-surface-container/90 backdrop-blur-xs">
           {tagText}
-        </div>
-        {/* Favorite button */}
-        <button
+        </Badge>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
           onClick={(e) => {
             e.preventDefault();
             setFavorited((f) => !f);
           }}
-          className="absolute top-3 right-3 bg-white/80 hover:bg-white text-primary p-2 rounded-full transition-colors backdrop-blur-sm shadow-sm"
+          className="absolute top-3 right-3 rounded-full bg-white/80 text-primary shadow-sm backdrop-blur-sm hover:bg-white"
           aria-label="Yêu thích"
         >
-          <span
-            className="material-symbols-outlined text-[18px]"
-            style={{ fontVariationSettings: favorited ? "'FILL' 1" : "'FILL' 0" }}
-          >
-            favorite
-          </span>
-        </button>
+          <Heart className={cn('size-[18px]', favorited && 'fill-current')} />
+        </Button>
       </div>
 
       {/* Info */}
@@ -131,7 +128,7 @@ export default function PropertyCard({ property, layout = 'grid' }: PropertyCard
           {property.title}
         </h3>
         <p className="text-[14px] md:text-[16px] leading-[1.6] text-secondary flex items-center gap-1.5">
-          <span className="material-symbols-outlined text-[18px]">location_on</span>
+          <MapPin className="size-[18px]" />
           <span className="line-clamp-1">{property.location}</span>
         </p>
         {renderMetrics()}

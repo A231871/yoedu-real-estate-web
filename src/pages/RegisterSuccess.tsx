@@ -1,6 +1,10 @@
 import { useSearchParams, Link } from 'react-router-dom';
+import { MailWarning } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 export default function RegisterSuccess() {
   const [searchParams] = useSearchParams();
@@ -10,11 +14,10 @@ export default function RegisterSuccess() {
     <>
       <Header />
       <main className="pt-24 min-h-screen bg-surface-container-low flex items-center justify-center px-5 py-20">
-        <div className="w-full max-w-md bg-white border border-outline-variant p-10 shadow-[0px_8px_40px_rgba(0,0,0,0.07)] text-center">
-
+        <Card className="w-full max-w-md p-10 gap-0 shadow-[0px_8px_40px_rgba(0,0,0,0.07)] text-center">
           {/* Icon */}
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-surface-container rounded-full mb-6">
-            <span className="material-symbols-outlined text-[36px] text-primary">mark_email_unread</span>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-surface-container rounded-full mb-6 mx-auto">
+            <MailWarning className="size-9 text-primary" />
           </div>
 
           <h1 className="text-[28px] font-medium leading-[1.3] tracking-[-0.01em] text-primary mb-4">
@@ -32,27 +35,20 @@ export default function RegisterSuccess() {
             Liên kết sẽ hết hạn sau <span className="font-medium text-on-surface">15 phút</span>.
           </p>
 
-          {/* Divider */}
-          <div className="h-px bg-outline-variant mb-8" />
+          <Separator className="mb-8" />
 
           <p className="text-[13px] text-secondary mb-6">
             Không nhận được email? Kiểm tra thư mục <span className="font-medium text-on-surface">Spam / Junk</span> hoặc thử lại.
           </p>
 
-          <Link
-            to="/auth?mode=register"
-            className="inline-block w-full border border-primary text-primary py-3 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase hover:bg-primary hover:text-on-primary transition-all mb-3"
-          >
-            Dùng email khác
-          </Link>
+          <Button asChild variant="outline" className="w-full mb-3">
+            <Link to="/auth?mode=register">Dùng email khác</Link>
+          </Button>
 
-          <Link
-            to="/auth?mode=login"
-            className="inline-block w-full bg-primary text-on-primary py-4 text-[12px] font-semibold leading-[1] tracking-[0.05em] uppercase hover:opacity-90 transition-all"
-          >
-            Về trang đăng nhập
-          </Link>
-        </div>
+          <Button asChild className="w-full">
+            <Link to="/auth?mode=login">Về trang đăng nhập</Link>
+          </Button>
+        </Card>
       </main>
       <Footer />
     </>

@@ -34,6 +34,27 @@ export async function getListingSummaries(
   return data.data?.content?.filter((listing) => listing.listingType === listingType) ?? [];
 }
 
+export interface ListingSummariesPage {
+  listings: ListingSummaryResponse[];
+  totalElements: number;
+  totalPages: number;
+}
+
+export async function getListingSummariesPage(
+  listingType: ListingSummaryResponseListingTypeEnum,
+  filters: ListingFilters = {}
+): Promise<ListingSummariesPage> {
+  const { data } = await listingControllerApi.getListings({
+    listingType: listingType as unknown as GetListingsListingTypeEnum,
+    ...filters,
+  });
+  return {
+    listings: data.data?.content?.filter((listing) => listing.listingType === listingType) ?? [],
+    totalElements: data.data?.totalElements ?? 0,
+    totalPages: data.data?.totalPages ?? 0,
+  };
+}
+
 export async function getListingDetail(listingId: string): Promise<ListingDetailResponse> {
   const { data } = await listingControllerApi.getListingDetail({ id: listingId });
 

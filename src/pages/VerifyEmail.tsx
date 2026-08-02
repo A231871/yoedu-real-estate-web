@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 type VerifyStatus = 'verifying' | 'success' | 'error';
 
